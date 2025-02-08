@@ -5,7 +5,14 @@ description = "Add your description here"
 authors = [
     { name = "Dhwanil Shah", email = "itzdhwanil@gmail.com" }
 ]
-dependencies = []
+dependencies = [
+    "asyncpg>=0.30.0",
+    "pydantic>=2.10.6",
+    "sanic>=24.12.0",
+    "python-dotenv>=1.0.1",
+    "structlog>=25.1.0",
+    "orjson>=3.10.15",
+]
 readme = "README.md"
 requires-python = ">= 3.8"
 
@@ -16,6 +23,11 @@ build-backend = "hatchling.build"
 [tool.rye]
 managed = true
 dev-dependencies = []
+
+[tool.rye.scripts]
+dev = "sanic iems.base.app --dev"
+migration = "python  -m iems.migrations"
+
 
 [tool.hatch.metadata]
 allow-direct-references = true
