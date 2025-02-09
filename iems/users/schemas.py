@@ -5,15 +5,15 @@ from enum import Enum
 
 
 class RoleEnum(str, Enum):
-    admin = "admin"
-    principal = "principal"
-    hod = "hod"
-    academic_staff = "academic_staff"
-    teacher = "teacher"
-    student = "student"
-    parents = "parents"
-    account_staff = "account_staff"
-    others = "others"
+    ADMIN = "admin"
+    PRINCIPAL = "principal"
+    HOD = "hod"
+    ACADEMIC_STAFF = "academic_staff"
+    TEACHER = "teacher"
+    STUDENT = "student"
+    PARENTS = "parents"
+    ACCOUNT_STAFF = "account_staff"
+    OTHERS = "others"
 
 
 class CreateUserRequest(BaseModel, use_enum_values=True):
