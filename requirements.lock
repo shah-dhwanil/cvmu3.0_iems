@@ -16,27 +16,37 @@ annotated-types==0.7.0
     # via pydantic
 argon2-cffi==23.1.0
     # via iems
+    # via pyseto
 argon2-cffi-bindings==21.2.0
     # via argon2-cffi
 asyncpg==0.30.0
     # via iems
 cffi==1.17.1
     # via argon2-cffi-bindings
+    # via cryptography
+cryptography==44.0.0
+    # via pyseto
 html5tagger==1.3.0
     # via sanic
     # via tracerite
 httptools==0.6.4
     # via sanic
+iso8601==2.1.0
+    # via pyseto
 multidict==6.1.0
     # via sanic
 orjson==3.10.15
     # via iems
 pycparser==2.22
     # via cffi
+pycryptodomex==3.21.0
+    # via pyseto
 pydantic==2.10.6
     # via iems
 pydantic-core==2.27.2
     # via pydantic
+pyseto==1.8.2
+    # via iems
 python-dotenv==1.0.1
     # via iems
 sanic==24.12.0

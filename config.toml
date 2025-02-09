@@ -1,5 +1,5 @@
 [DEFAULT]
-
+PUBLIC_ROUTES = ["iems.auth.login"]
 [DEV]
 SERVER_HOST = "localhost"
 SERVER_PORT = 8000

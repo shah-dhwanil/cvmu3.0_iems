@@ -2,7 +2,7 @@ from structlog.contextvars import clear_contextvars, bind_contextvars
 from sanic import Request, Sanic
 from structlog import get_logger
 from sanic.response.types import HTTPResponse
-
+from iems.auth.middlewares import auth_middleware
 __all__ = ["register_middlewares"]
 
 
@@ -10,7 +10,11 @@ def add_context(request: Request):
     """
     Binds logging contet for each request.
     """
-    bind_contextvars(request_id=str(request.id))
+    if request.ctx.user is None:
+        user_id = None
+    else:
+        user_id = request.ctx.user.user_id
+    bind_contextvars(request_id=str(request.id),user_id=user_id)
 
 
 def destroy_context(*_):
@@ -25,6 +29,7 @@ def log_request(request: Request):
     Logs each request
     """
     logger = get_logger()
+
     logger.info(
         event="request_received",
         route=request.endpoint,
@@ -52,6 +57,7 @@ def register_middlewares(app: Sanic):
     """
     Register all the middleware in required order to the Sanic Application
     """
+    app.register_middleware(auth_middleware, "request")
     app.register_middleware(add_context, "request")
     app.register_middleware(log_request, "request")
     app.register_middleware(destroy_context, "response")

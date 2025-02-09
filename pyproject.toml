@@ -14,6 +14,7 @@ dependencies = [
     "orjson>=3.10.15",
     "argon2-cffi>=23.1.0",
     "uuid-utils>=0.10.0",
+    "pyseto>=1.8.2",
 ]
 readme = "README.md"
 requires-python = ">= 3.8"
