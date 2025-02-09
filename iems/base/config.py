@@ -14,7 +14,7 @@ class Config(BaseModel):
     POSTGRES_MIN_CONN: int
     POSTGRES_MAX_CONN: int
     PASETO_SECRET_KEY: str
-    PUBLIC_ROUTES:list[str]
+    PUBLIC_ROUTES: list[str]
 
     @staticmethod
     def __get_toml_config(environment: str):

@@ -15,6 +15,7 @@ from iems.users.schemas import (
     RoleEnum,
 )
 
+
 class UserRepository:
     @staticmethod
     async def create_user(create_user: CreateUserRequest) -> UUID:
@@ -52,15 +53,17 @@ class UserRepository:
             )
             if row:
                 return GetUserResponse(
-                    id=row['id'],
-                    username=row['username'],
-                    role=RoleEnum(row['role']),
-                    active=row['active']
+                    id=row["id"],
+                    username=row["username"],
+                    role=RoleEnum(row["role"]),
+                    active=row["active"],
                 )
             return None
 
     @staticmethod
-    async def update_user_role(user_id: UUID, update_role: UpdateUserRoleRequest) -> bool:
+    async def update_user_role(
+        user_id: UUID, update_role: UpdateUserRoleRequest
+    ) -> bool:
         async with PGConnection.get_connection() as conn:
             result = await conn.execute(
                 """
@@ -74,7 +77,9 @@ class UserRepository:
             return result == "UPDATE 1"
 
     @staticmethod
-    async def update_user_password(user_id: UUID, update_password: UpdateUserPasswordRequest) -> bool:
+    async def update_user_password(
+        user_id: UUID, update_password: UpdateUserPasswordRequest
+    ) -> bool:
         ph = PasswordHasher()
         update_password.password = ph.hash(update_password.password)
         async with PGConnection.get_connection() as conn:
@@ -115,9 +120,9 @@ class UserRepository:
             )
             if row:
                 return GetUserResponse(
-                    id=row['id'],
-                    username=row['username'],
-                    role=RoleEnum(row['role']),
-                    active=row['active']
+                    id=row["id"],
+                    username=row["username"],
+                    role=RoleEnum(row["role"]),
+                    active=row["active"],
                 )
             return None

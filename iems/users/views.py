@@ -11,7 +11,7 @@ from iems.users.schemas import (
     UpdateUserRoleRequest,
     UpdateUserPasswordRequest,
     UsernameAlreadyExistsResponse,
-    EmptyResponse
+    EmptyResponse,
 )
 
 
@@ -21,7 +21,7 @@ async def create_user(request, data: CreateUserRequest, **_):
     try:
         user_id = await UserRepository.create_user(data)
         return JSONResponse(CreateUserResponse(id=user_id).model_dump_json(), 200)
-    except UsernameAlreadyExistsException as e:
+    except UsernameAlreadyExistsException:
         return JSONResponse(UsernameAlreadyExistsResponse().model_dump_json(), 409)
 
 
@@ -46,7 +46,9 @@ async def update_user_role(request, user_id: UUID, data: UpdateUserRoleRequest, 
 
 @users_bp.patch("/<user_id:uuid>/password")
 @validate(body=UpdateUserPasswordRequest)
-async def update_user_password(request, user_id: UUID, data: UpdateUserPasswordRequest, **_):
+async def update_user_password(
+    request, user_id: UUID, data: UpdateUserPasswordRequest, **_
+):
     success = await UserRepository.update_user_password(user_id, data)
     if not success:
         return JSONResponse(EmptyResponse().model_dump_json(), 404)

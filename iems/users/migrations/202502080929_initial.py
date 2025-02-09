@@ -1,4 +1,3 @@
-
 # List of dependencies (migration that must be applied before this one)
 dependencies = []
 
@@ -45,7 +44,7 @@ apply = [
         '$argon2id$v=19$m=65536,t=3,p=4$cfsuMRLM9Du3v41KFlZMiw$j6zQv23xtp6aJWRvRYWow5qj1KlXg1QCBEPL2g2MM+M',
         'admin'
     );
-    """
+    """,
 ]
 
 # SQL to rollback the migration
@@ -62,5 +61,4 @@ rollback = [
     --sql
     DROP TYPE Roles;
     """,
-
 ]
