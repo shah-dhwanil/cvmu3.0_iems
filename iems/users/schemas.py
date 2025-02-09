@@ -58,3 +58,8 @@ class UsernameAlreadyExistsResponse(BaseModel):
 
 
 class EmptyResponse(BaseModel): ...
+
+
+class UserNotFoundResponse(BaseModel):
+    error: str = "user_not_found"
+    message: str = "User not found"

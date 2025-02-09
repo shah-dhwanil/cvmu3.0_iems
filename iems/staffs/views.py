@@ -2,18 +2,18 @@ from uuid import UUID
 from iems.auth.schemas import AccessDenied
 from iems.base.response import JSONResponse
 from iems.base.decorators import validate
-from iems.users.schemas import RoleEnum
+from iems.users.exceptions import UserNotFoundException
+from iems.users.schemas import RoleEnum, UserNotFoundResponse
 from iems.auth.decorators import require_roles
 from iems.staffs.blueprint import staff_bp
 from iems.staffs.repository import StaffRepository
-from iems.staffs.exceptions import StaffAlreadyExistsError, UserNotFoundError
-
+from iems.staffs.exceptions import StaffAlreadyExistsError
 from iems.staffs.schemas import (
     CreateStaffRequest,
     UpdateStaffRequest,
     EmptyResponse,
     StaffAlreadyExistsResponse,
-    UserNotFoundResponse,
+    StaffNotFoundResponse,
 )
 
 
@@ -27,7 +27,7 @@ async def create_staff(request, data: CreateStaffRequest, **_):
         return JSONResponse(EmptyResponse().model_dump_json(), 201)
     except StaffAlreadyExistsError:
         return JSONResponse(StaffAlreadyExistsResponse().model_dump_json(), 409)
-    except UserNotFoundError:
+    except UserNotFoundException:
         return JSONResponse(UserNotFoundResponse().model_dump_json(), 404)
 
 
@@ -44,7 +44,7 @@ async def get_staff(request, staff_id: UUID = None):
     staff = await StaffRepository.get_staff(staff_id)
     if staff:
         return JSONResponse(staff.model_dump_json(), 200)
-    return JSONResponse(UserNotFoundResponse().model_dump_json(), 404)
+    return JSONResponse(StaffNotFoundResponse().model_dump_json(), 404)
 
 
 @staff_bp.put("/<staff_id:uuid>")
@@ -70,7 +70,7 @@ async def update_staff(request, staff_id: UUID, data: UpdateStaffRequest, **_):
         success = await StaffRepository.update_staff(staff_id, data)
         if success:
             return JSONResponse(EmptyResponse().model_dump_json(), 200)
-        return JSONResponse(UserNotFoundResponse().model_dump_json(), 404)
+        return JSONResponse(StaffNotFoundResponse().model_dump_json(), 404)
     except StaffAlreadyExistsError:
         return JSONResponse(StaffAlreadyExistsResponse().model_dump_json(), 409)
 
@@ -82,4 +82,4 @@ async def delete_staff(request, staff_id: UUID):
     success = await StaffRepository.delete_staff(staff_id)
     if success:
         return JSONResponse(EmptyResponse().model_dump_json(), 200)
-    return JSONResponse(UserNotFoundResponse().model_dump_json(), 404)
+    return JSONResponse(StaffNotFoundResponse().model_dump_json(), 404)

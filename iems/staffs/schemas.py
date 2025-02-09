@@ -53,6 +53,6 @@ class StaffAlreadyExistsResponse(BaseModel):
     message: str = "A staff member with this email or mobile no already exists"
 
 
-class UserNotFoundResponse(BaseModel):
-    error: str = "user_not_found"
-    message: str = "User member not found"
+class StaffNotFoundResponse(BaseModel):
+    error: str = "staff_not_found"
+    message: str = "Staff member not found"

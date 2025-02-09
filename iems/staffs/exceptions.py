@@ -6,6 +6,6 @@ class StaffAlreadyExistsError(IEMSException):
     message: str = "A staff member with this email or mobile no already exists"
 
 
-class UserNotFoundError(IEMSException):
-    error: str = "user_not_found"
-    message: str = "User member not found"
+class StaffNotFoundError(IEMSException):
+    error: str = "staff_not_found"
+    message: str = "Staff member not found"

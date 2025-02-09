@@ -10,7 +10,8 @@ from iems.staffs.schemas import (
     GetAllStaffResponse,
 )
 
-from iems.staffs.exceptions import StaffAlreadyExistsError, UserNotFoundError
+from iems.staffs.exceptions import StaffAlreadyExistsError
+from iems.users.exceptions import UserNotFoundException
 
 
 class StaffRepository:
@@ -38,7 +39,7 @@ class StaffRepository:
             except UniqueViolationError:
                 raise StaffAlreadyExistsError()
             except ForeignKeyViolationError:
-                raise UserNotFoundError()
+                raise UserNotFoundException()
 
     @staticmethod
     async def get_staff(staff_id: UUID) -> Optional[GetStaffResponse]:

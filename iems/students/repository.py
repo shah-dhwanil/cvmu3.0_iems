@@ -2,7 +2,7 @@ from uuid import UUID
 from typing import Optional
 from asyncpg import ForeignKeyViolationError, UniqueViolationError
 from iems.base.postgres import PGConnection
-from iems.students.exceptions import StudentAlreadyExistsError, StudentNotFoundError
+from iems.students.exceptions import StudentAlreadyExistsError
 
 from iems.students.schemas import (
     CreateStudentRequest,
@@ -10,6 +10,7 @@ from iems.students.schemas import (
     UpdateStudentRequest,
     GetAllStudentsResponse,
 )
+from iems.users.exceptions import UserNotFoundException
 
 
 class StudentRepository:
@@ -37,7 +38,7 @@ class StudentRepository:
             except UniqueViolationError:
                 raise StudentAlreadyExistsError()
             except ForeignKeyViolationError:
-                raise StudentNotFoundError()
+                raise UserNotFoundException()
 
     @staticmethod
     async def get_student(student_id: UUID) -> Optional[GetStudentResponse]:

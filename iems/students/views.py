@@ -2,11 +2,12 @@ from uuid import UUID
 from iems.auth.schemas import AccessDenied
 from iems.base.response import JSONResponse
 from iems.base.decorators import validate
-from iems.users.schemas import RoleEnum
+from iems.users.exceptions import UserNotFoundException
+from iems.users.schemas import RoleEnum, UserNotFoundResponse
 from iems.auth.decorators import not_allowed_roles, require_roles
 from iems.students.blueprint import student_bp
 from iems.students.repository import StudentRepository
-from iems.students.exceptions import StudentAlreadyExistsError, StudentNotFoundError
+from iems.students.exceptions import StudentAlreadyExistsError
 
 from iems.students.schemas import (
     CreateStudentRequest,
@@ -27,8 +28,8 @@ async def create_student(request, data: CreateStudentRequest, **_):
         return JSONResponse(EmptyResponse().model_dump_json(), 201)
     except StudentAlreadyExistsError:
         return JSONResponse(StudentAlreadyExistsResponse().model_dump_json(), 409)
-    except StudentNotFoundError:
-        return JSONResponse(StudentNotFoundResponse().model_dump_json(), 404)
+    except UserNotFoundException:
+        return JSONResponse(UserNotFoundResponse().model_dump_json(), 404)
 
 
 @student_bp.get("/")
