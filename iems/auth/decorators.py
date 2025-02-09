@@ -39,3 +39,40 @@ def require_roles(allowed_roles: Union[str, RoleEnum, List[str], List[RoleEnum]]
         return decorated_function
 
     return decorator
+
+
+def not_allowed_roles(
+    not_allowed_roles: Union[str, RoleEnum, List[str], List[RoleEnum]],
+):
+    """
+    Decorator to check if the current user does not have the specified role(s)
+
+    Args:
+        not_allowed_roles: Single role string or list of role strings that are not allowed to access the endpoint
+
+    Returns:
+        Decorator function that checks user roles
+    """
+    if isinstance(not_allowed_roles, str):
+        not_allowed_roles = [not_allowed_roles]
+    if isinstance(not_allowed_roles, RoleEnum):
+        not_allowed_roles = [not_allowed_roles]
+
+    def decorator(f):
+        @wraps(f)
+        async def decorated_function(request: Request, *args, **kwargs):
+            # Check if user exists in request context
+            if not hasattr(request.ctx, "user") or request.ctx.user is None:
+                return JSONResponse(TokenNotFound().model_dump_json(), 401)
+
+            # Check if user has any of the not allowed roles
+            user_role = request.ctx.user.role
+            if user_role in not_allowed_roles:
+                return JSONResponse(AccessDenied().model_dump_json(), 403)
+
+            # If role check passes, proceed to the handler
+            return await f(request, *args, **kwargs)
+
+        return decorated_function
+
+    return decorator

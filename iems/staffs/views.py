@@ -23,8 +23,8 @@ from iems.staffs.schemas import (
 async def create_staff(request, data: CreateStaffRequest, **_):
     """Create a new staff member"""
     try:
-        staff_id = await StaffRepository.create_staff(data)
-        return JSONResponse({"id": str(staff_id)}, 201)
+        await StaffRepository.create_staff(data)
+        return JSONResponse(EmptyResponse().model_dump_json(), 201)
     except StaffAlreadyExistsError:
         return JSONResponse(StaffAlreadyExistsResponse().model_dump_json(), 409)
     except UserNotFoundError:
