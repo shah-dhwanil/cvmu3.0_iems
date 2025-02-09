@@ -5,15 +5,20 @@ from iems.base.models import UnkownExceptionModel
 from iems.base.response import JSONResponse
 
 
-class VeroperaException(BaseException):
+class IEMSException(BaseException):
     slug: ClassVar[str]
     description: ClassVar[str]
-    context: dict[str, Any] = dict()
+
+    def __init__(self, context: dict[str, Any] = None):
+        if context:
+            self.context = context
+        else:
+            self.context = dict()
 
 
 class ErrorHandler(BaseErrorHandler):
     def default(self, request, exception):
-        if not issubclass(exception.__class__, VeroperaException):
+        if not issubclass(exception.__class__, IEMSException):
             get_logger().error(
                 event="unkonwn_exception",
                 context={

@@ -4,6 +4,8 @@ from orjson import dumps, loads
 from iems.base.listners import register_listners
 from iems.base.exceptions import ErrorHandler
 from iems.base.middlewares import register_middlewares
+from iems.base.response import JSONResponse
+from iems.base.blueprints import register_blueprints
 
 app = Sanic(
     "iems",
@@ -14,6 +16,7 @@ app = Sanic(
 )
 register_listners(app)
 register_middlewares(app)
+register_blueprints(app)
 
 
 @app.get("/")

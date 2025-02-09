@@ -14,8 +14,14 @@ aiofiles==24.1.0
     # via sanic
 annotated-types==0.7.0
     # via pydantic
+argon2-cffi==23.1.0
+    # via iems
+argon2-cffi-bindings==21.2.0
+    # via argon2-cffi
 asyncpg==0.30.0
     # via iems
+cffi==1.17.1
+    # via argon2-cffi-bindings
 html5tagger==1.3.0
     # via sanic
     # via tracerite
@@ -25,6 +31,8 @@ multidict==6.1.0
     # via sanic
 orjson==3.10.15
     # via iems
+pycparser==2.22
+    # via cffi
 pydantic==2.10.6
     # via iems
 pydantic-core==2.27.2
@@ -47,6 +55,8 @@ typing-extensions==4.12.2
     # via sanic
 ujson==5.10.0
     # via sanic
+uuid-utils==0.10.0
+    # via iems
 uvloop==0.21.0
     # via sanic
 websockets==14.2
