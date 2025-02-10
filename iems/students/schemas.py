@@ -44,9 +44,11 @@ class UpdateStudentRequest(BaseModel):
     contact_no: str = Field(None, max_length=16)
     email_id: EmailStr = Field(None, max_length=32)
 
+
 class UpdateStudentCurrentSemRequest(BaseModel):
     branch_id: UUID
     current_sem: UUID
+
 
 class EmptyResponse(BaseModel):
     pass

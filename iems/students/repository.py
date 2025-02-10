@@ -119,10 +119,10 @@ class StudentRepository:
 
     @staticmethod
     async def update_student_current_sem(
-        update_request: UpdateStudentCurrentSemRequest
+        update_request: UpdateStudentCurrentSemRequest,
     ):
         async with PGConnection.get_connection() as conn:
-            result = await conn.execute(
+            await conn.execute(
                 """
                 UPDATE student
                 SET current_sem = $1

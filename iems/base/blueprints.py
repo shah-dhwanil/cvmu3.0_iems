@@ -4,6 +4,8 @@ from iems.staffs.views import staff_bp
 from iems.students.views import student_bp
 from iems.parents.views import parent_bp
 from iems.batch.views import batch_bp
+from iems.semister.views import semister_bp
+from iems.subjects.views import subjects_bp
 
 
 def register_blueprints(app):
@@ -13,3 +15,5 @@ def register_blueprints(app):
     app.blueprint(student_bp)
     app.blueprint(parent_bp)
     app.blueprint(batch_bp)
+    app.blueprint(semister_bp)
+    app.blueprint(subjects_bp)

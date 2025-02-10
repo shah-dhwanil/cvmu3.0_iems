@@ -31,7 +31,7 @@ async def create_semister(request, data: CreateSemisterRequest, **_):
 
 
 @semister_bp.get("/<semister_id:uuid>")
-@not_allowed_roles([RoleEnum.STUDENT, RoleEnum.PARENT])
+@not_allowed_roles([RoleEnum.STUDENT, RoleEnum.PARENTS])
 async def get_semister(request, semister_id: UUID, **_):
     semister = await SemisterRepository.get_semister(semister_id)
     if semister is None:

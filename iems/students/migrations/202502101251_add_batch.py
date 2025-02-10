@@ -1,6 +1,5 @@
-
 # List of dependencies (migration that must be applied before this one)
-dependencies = ["students.202502091505_initial","batch.202502100544_initial"]
+dependencies = ["students.202502091505_initial", "batch.202502100544_initial"]
 
 # SQL to apply the migration
 apply = [
