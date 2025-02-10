@@ -16,7 +16,7 @@ class CreateBatchResponse(BaseModel):
 
 
 class MultipleCreateBatchResponse(BaseModel):
-    ids = list[CreateBatchResponse]
+    ids: list[CreateBatchResponse]
 
 
 class GetBatchResponse(BaseModel):
