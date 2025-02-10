@@ -1,5 +1,6 @@
 [DEFAULT]
 PUBLIC_ROUTES = ["iems.auth.login"]
+BRANCH_LIST = ["Computer Engineering","Computer Science & DESIGN"]
 [DEV]
 SERVER_HOST = "localhost"
 SERVER_PORT = 8000
