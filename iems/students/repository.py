@@ -7,6 +7,7 @@ from iems.students.exceptions import StudentAlreadyExistsError
 from iems.students.schemas import (
     CreateStudentRequest,
     GetStudentResponse,
+    UpdateStudentCurrentSemRequest,
     UpdateStudentRequest,
     GetAllStudentsResponse,
 )
@@ -22,9 +23,9 @@ class StudentRepository:
                     """
                     INSERT INTO student (
                         id, first_name, last_name, enrollment_id,
-                        gender, contact_no, email_id
+                        gender, contact_no, email_id,batch_id,current_sem
                     )
-                    VALUES ($1, $2, $3, $4, $5, $6, $7)
+                    VALUES ($1, $2, $3, $4, $5, $6, $7,$8,$9)
                     """,
                     create_student.id,
                     create_student.first_name,
@@ -33,6 +34,8 @@ class StudentRepository:
                     create_student.gender,
                     create_student.contact_no,
                     create_student.email_id,
+                    create_student.batch_id,
+                    create_student.current_sem,
                 )
                 return create_student.id
             except UniqueViolationError:
@@ -113,6 +116,21 @@ class StudentRepository:
                 return result == "UPDATE 1"
             except UniqueViolationError:
                 raise StudentAlreadyExistsError()
+
+    @staticmethod
+    async def update_student_current_sem(
+        update_request: UpdateStudentCurrentSemRequest
+    ):
+        async with PGConnection.get_connection() as conn:
+            result = await conn.execute(
+                """
+                UPDATE student
+                SET current_sem = $1
+                WHERE branch_id = $2
+                """,
+                update_request.current_sem,
+                update_request.branch_id,
+            )
 
     @staticmethod
     async def delete_student(student_id: UUID) -> bool:

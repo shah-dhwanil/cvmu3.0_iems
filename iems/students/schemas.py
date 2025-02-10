@@ -11,6 +11,8 @@ class CreateStudentRequest(BaseModel):
     gender: str = Field(..., max_length=1)
     contact_no: str = Field(..., max_length=16)
     email_id: EmailStr = Field(..., max_length=32)
+    batch_id: UUID
+    current_sem: UUID
 
 
 class GetStudentResponse(BaseModel):
@@ -42,6 +44,9 @@ class UpdateStudentRequest(BaseModel):
     contact_no: str = Field(None, max_length=16)
     email_id: EmailStr = Field(None, max_length=32)
 
+class UpdateStudentCurrentSemRequest(BaseModel):
+    branch_id: UUID
+    current_sem: UUID
 
 class EmptyResponse(BaseModel):
     pass

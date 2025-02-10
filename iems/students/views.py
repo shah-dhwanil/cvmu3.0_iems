@@ -11,6 +11,7 @@ from iems.students.exceptions import StudentAlreadyExistsError
 
 from iems.students.schemas import (
     CreateStudentRequest,
+    UpdateStudentCurrentSemRequest,
     UpdateStudentRequest,
     EmptyResponse,
     StudentAlreadyExistsResponse,
@@ -75,6 +76,12 @@ async def update_student(request, student_id: UUID, data: UpdateStudentRequest, 
     except StudentAlreadyExistsError:
         return JSONResponse(StudentAlreadyExistsResponse().model_dump_json(), 409)
 
+@student_bp.put("/current-sem")
+@require_roles([RoleEnum.ADMIN, RoleEnum.ACADEMIC_STAFF, RoleEnum.PRINCIPAL])
+@validate(body=UpdateStudentCurrentSemRequest)
+async def update_student_current_sem(request, data: UpdateStudentCurrentSemRequest, **_):
+    await StudentRepository.update_student_current_sem(data)
+    return JSONResponse(EmptyResponse().model_dump_json(), 200)
 
 @student_bp.delete("/<student_id:uuid>")
 @require_roles([RoleEnum.ADMIN, RoleEnum.ACADEMIC_STAFF, RoleEnum.PRINCIPAL])
