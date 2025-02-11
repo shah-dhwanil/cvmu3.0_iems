@@ -6,7 +6,7 @@ from iems.parents.views import parent_bp
 from iems.batch.views import batch_bp
 from iems.semister.views import semister_bp
 from iems.subjects.views import subjects_bp
-
+from iems.courses.views import courses_bp
 
 def register_blueprints(app):
     app.blueprint(users_bp)
@@ -17,3 +17,4 @@ def register_blueprints(app):
     app.blueprint(batch_bp)
     app.blueprint(semister_bp)
     app.blueprint(subjects_bp)
+    app.blueprint(courses_bp)
