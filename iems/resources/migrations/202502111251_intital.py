@@ -1,10 +1,9 @@
-
 # List of dependencies (migration that must be applied before this one)
 dependencies = ["subjects.202502101316_initial", "staffs.202502091219_initial"]
 
 # SQL to apply the migration
 apply = [
-        """
+    """
         --sql
         CREATE TYPE ResourceType AS ENUM (
             'lecture_notes',
@@ -15,7 +14,7 @@ apply = [
             'others'
         );
         """,
-        """
+    """
         --sql
         CREATE TABLE resources (
             id UUID DEFAULT gen_random_uuid(),
@@ -30,7 +29,7 @@ apply = [
             CONSTRAINT fk_resources_staff FOREIGN KEY (shared_by) REFERENCES staff(id)
         );
         """,
-        """
+    """
         --sql
         CREATE INDEX idx_resources_subject ON resources (subject_id);
         """,

@@ -4,6 +4,7 @@ from uuid import UUID
 from enum import Enum
 from datetime import datetime
 
+
 class ResourceTypeEnum(str, Enum):
     LECTURE_NOTES = "lecture_notes"
     LAB_MANUAL = "lab_manual"
@@ -13,7 +14,7 @@ class ResourceTypeEnum(str, Enum):
     OTHERS = "others"
 
 
-class CreateResourceRequest(BaseModel,use_enum_values=True):
+class CreateResourceRequest(BaseModel, use_enum_values=True):
     subject_id: UUID
     title: str
     shared_by: Optional[UUID]
@@ -25,7 +26,7 @@ class CreateResourceResponse(BaseModel):
     id: UUID
 
 
-class GetResourceResponse(BaseModel,use_enum_values=True):
+class GetResourceResponse(BaseModel, use_enum_values=True):
     id: UUID
     subject_id: UUID
     title: str
@@ -34,13 +35,14 @@ class GetResourceResponse(BaseModel,use_enum_values=True):
     type: ResourceTypeEnum
     docs_id: UUID
 
+
 class GetResourceBySubject(BaseModel):
     resources: list[GetResourceResponse]
 
 
-class UpdateResourceRequest(BaseModel,use_enum_values=True):
+class UpdateResourceRequest(BaseModel, use_enum_values=True):
     title: str
-    type:ResourceTypeEnum
+    type: ResourceTypeEnum
 
 
 class ResourceNotFoundResponse(BaseModel):
@@ -48,5 +50,4 @@ class ResourceNotFoundResponse(BaseModel):
     message: str = "Resource not found"
 
 
-class EmptyResponse(BaseModel):
-    ...
+class EmptyResponse(BaseModel): ...

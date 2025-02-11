@@ -11,6 +11,8 @@ from iems.attendence.views import attendence_bp
 from iems.leave.views import leave_bp
 from iems.achievements.views import achievements_bp
 from iems.resources.views import resources_bp
+from iems.fees.views import fees_bp
+
 
 def register_blueprints(app):
     app.blueprint(users_bp)
@@ -26,3 +28,4 @@ def register_blueprints(app):
     app.blueprint(leave_bp)
     app.blueprint(achievements_bp)
     app.blueprint(resources_bp)
+    app.blueprint(fees_bp)
