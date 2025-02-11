@@ -1,5 +1,9 @@
 # List of dependencies (migration that must be applied before this one)
-dependencies = ["semister.202502100623_initial","subjects.202502101316_initial","staffs.202502091219_initial"]
+dependencies = [
+    "semister.202502100623_initial",
+    "subjects.202502101316_initial",
+    "staffs.202502091219_initial",
+]
 
 # SQL to apply the migration
 apply = [

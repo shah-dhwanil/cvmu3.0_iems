@@ -7,7 +7,7 @@ from iems.courses.schemas import (
     CreateCourseRequest,
     GetCourseResponse,
     UpdateCourseRequest,
-    GetCourseTaughtBy
+    GetCourseTaughtBy,
 )
 
 
@@ -65,13 +65,10 @@ class CourseRepository:
             )
             return [
                 GetCourseTaughtBy(
-                    id=r["id"],
-                    name=r["name"],
-                    branch=r["branch"],
-                    year=r["year"]
-                ) for r in row
+                    id=r["id"], name=r["name"], branch=r["branch"], year=r["year"]
+                )
+                for r in row
             ]
-
 
     @staticmethod
     async def update_course(
