@@ -8,6 +8,7 @@ from iems.semister.views import semister_bp
 from iems.subjects.views import subjects_bp
 from iems.courses.views import courses_bp
 from iems.attendence.views import attendence_bp
+from iems.leave.views import leave_bp
 
 
 def register_blueprints(app):
@@ -21,3 +22,4 @@ def register_blueprints(app):
     app.blueprint(subjects_bp)
     app.blueprint(courses_bp)
     app.blueprint(attendence_bp)
+    app.blueprint(leave_bp)

@@ -31,6 +31,15 @@ class GetCourseTaughtBy(BaseModel):
     year: int
 
 
+class GetCouseByStudentId(BaseModel):
+    class Course(BaseModel):
+        id: UUID
+        name: str
+        by: UUID
+
+    courses: list[Course]
+
+
 class GetCourseTaughtByResponse(BaseModel):
     courses: list[GetCourseTaughtBy]
 

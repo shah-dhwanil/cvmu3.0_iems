@@ -6,6 +6,7 @@ from uuid_utils import uuid7
 from iems.courses.schemas import (
     CreateCourseRequest,
     GetCourseResponse,
+    GetCouseByStudentId,
     UpdateCourseRequest,
     GetCourseTaughtBy,
 )
@@ -48,6 +49,24 @@ class CourseRepository:
                     active=row["active"],
                 )
             return None
+
+    @staticmethod
+    async def get_course_by_student_id(student_id: UUID) -> list[GetCourseTaughtBy]:
+        async with PGConnection.get_connection() as conn:
+            row = await conn.fetch(
+                """
+                SELECT courses.id,subjects.name,courses.taught_by FROM courses
+                INNER JOIN semister ON courses.sem_id = semister.id
+                INNER JOIN batch ON semister.batch_id = batch.id
+                INNER JOIN subjects ON courses.subject_id = subjects.id
+                WHERE students.id = $1 courses.sem_id = students.cuur_sem;
+                """,
+                student_id,
+            )
+            return [
+                GetCouseByStudentId(id=r["id"], name=r["name"], by=r["taught_by"])
+                for r in row
+            ]
 
     @staticmethod
     async def get_course_by_teacher_id(teacher_id: UUID) -> list[GetCourseTaughtBy]:
