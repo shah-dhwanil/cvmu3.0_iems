@@ -23,7 +23,7 @@ class ParentRepository:
                         id, student_id, father_name, mother_name,
                         contact_no, email_id
                     )
-                    VALUES ($1, $2, $3, $4, $5, $6)
+                    VALUES ($1, $2, $3, $4, $5, $6);
                     """,
                     create_parent.id,
                     create_parent.student_id,
@@ -46,7 +46,7 @@ class ParentRepository:
                 SELECT id, student_id, father_name, mother_name,
                        contact_no, email_id, active
                 FROM parent
-                WHERE id = $1
+                WHERE id = $1;
                 """,
                 parent_id,
             )
@@ -70,7 +70,7 @@ class ParentRepository:
                 SELECT id, student_id, father_name, mother_name,
                        contact_no, email_id, active
                 FROM parent
-                WHERE student_id = $1
+                WHERE student_id = $1;
                 """,
                 student_id,
             )
@@ -99,7 +99,7 @@ class ParentRepository:
                         mother_name = $2,
                         contact_no = $3,
                         email_id = $4
-                    WHERE id = $5
+                    WHERE id = $5;
                     """,
                     update_parent.father_name,
                     update_parent.mother_name,
@@ -118,7 +118,7 @@ class ParentRepository:
                 """
                 UPDATE parent
                 SET active = false
-                WHERE id = $1
+                WHERE id = $1;
                 """,
                 parent_id,
             )

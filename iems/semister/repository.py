@@ -21,9 +21,9 @@ class SemisterRepository:
                 await conn.execute(
                     """
                     INSERT INTO semister (id, batch_id, sem_no, ongoing)
-                    VALUES ($1, $2, $3, $4)
+                    VALUES ($1, $2, $3, $4);
                     """,
-                    semister_id,
+                    str(semister_id),
                     create_semister.batch_id,
                     create_semister.sem_no,
                     create_semister.ongoing,
@@ -39,7 +39,7 @@ class SemisterRepository:
                 """
                 SELECT id, batch_id, sem_no, ongoing, active
                 FROM semister
-                WHERE id = $1
+                WHERE id = $1;
                 """,
                 semister_id,
             )
@@ -64,7 +64,7 @@ class SemisterRepository:
                 SET batch_id = $1,
                     sem_no = $2,
                     ongoing = $3
-                WHERE id = $4
+                WHERE id = $4;
                 """,
                 update_semister.batch_id,
                 update_semister.sem_no,
@@ -80,7 +80,7 @@ class SemisterRepository:
                 """
                 UPDATE semister
                 SET active = false
-                WHERE id = $1
+                WHERE id = $1;
                 """,
                 semister_id,
             )

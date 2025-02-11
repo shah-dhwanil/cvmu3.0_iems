@@ -27,9 +27,9 @@ class UserRepository:
                 await conn.execute(
                     """
                     INSERT INTO users (id, username, password, role, active)
-                    VALUES ($1, $2, $3, $4, $5)
+                    VALUES ($1, $2, $3, $4, $5);
                     """,
-                    user_id,
+                    str(user_id),
                     create_user.username,
                     create_user.password,
                     create_user.role,
@@ -47,7 +47,7 @@ class UserRepository:
                 """
                 SELECT id, username, role, active
                 FROM users
-                WHERE id = $1
+                WHERE id = $1;
                 """,
                 user_id,
             )
@@ -69,7 +69,7 @@ class UserRepository:
                 """
                 UPDATE users
                 SET role = $1
-                WHERE id = $2
+                WHERE id = $2;
                 """,
                 update_role.role,
                 user_id,
@@ -87,7 +87,7 @@ class UserRepository:
                 """
                 UPDATE users
                 SET password = $1
-                WHERE id = $2
+                WHERE id = $2;
                 """,
                 update_password.password,  # Note: Password should be hashed before storage
                 user_id,
@@ -101,7 +101,7 @@ class UserRepository:
                 """
                 UPDATE users
                 SET active = false
-                WHERE id = $1
+                WHERE id = $1;
                 """,
                 user_id,
             )
@@ -114,7 +114,7 @@ class UserRepository:
                 """
                 SELECT id, username, role, active
                 FROM users
-                WHERE username = $1
+                WHERE username = $1;
                 """,
                 username,
             )

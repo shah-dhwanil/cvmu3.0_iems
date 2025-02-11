@@ -25,7 +25,7 @@ class StaffRepository:
                         id, first_name, last_name, contact_no, 
                         email_id, qualification, experience
                     )
-                    VALUES ($1, $2, $3, $4, $5, $6, $7)
+                    VALUES ($1, $2, $3, $4, $5, $6, $7);
                     """,
                     create_staff.id,
                     create_staff.first_name,
@@ -49,7 +49,7 @@ class StaffRepository:
                 SELECT id, first_name, last_name, contact_no, 
                        email_id, qualification, experience, active
                 FROM staff
-                WHERE id = $1
+                WHERE id = $1;
                 """,
                 staff_id,
             )
@@ -73,7 +73,7 @@ class StaffRepository:
                 """
                 SELECT id, first_name, last_name
                 FROM staff
-                WHERE active = true
+                WHERE active = true;
                 """
             )
             staff_members = [
@@ -97,7 +97,7 @@ class StaffRepository:
                         email_id = $4,
                         qualification = $5,
                         experience = $6
-                    WHERE id = $7
+                    WHERE id = $7;
                     """,
                     update_staff.first_name,
                     update_staff.last_name,
@@ -118,7 +118,7 @@ class StaffRepository:
                 """
                 UPDATE staff
                 SET active = false
-                WHERE id = $1
+                WHERE id = $1;
                 """,
                 staff_id,
             )

@@ -19,7 +19,7 @@ class CourseRepository:
             await conn.execute(
                 """
                 INSERT INTO courses (id, sem_id, subject_id, taught_by)
-                VALUES ($1, $2, $3, $4)
+                VALUES ($1, $2, $3, $4);
                 """,
                 str(course_id),
                 create_course.sem_id,
@@ -35,7 +35,7 @@ class CourseRepository:
                 """
                 SELECT id, sem_id, subject_id, taught_by, active, created_at
                 FROM courses
-                WHERE id = $1
+                WHERE id = $1;
                 """,
                 course_id,
             )
@@ -82,7 +82,7 @@ class CourseRepository:
                 """
                 UPDATE courses
                 SET sem_id = $1, subject_id = $2, taught_by = $3
-                WHERE id = $4
+                WHERE id = $4;
                 """,
                 update_course.sem_id,
                 update_course.subject_id,
@@ -98,7 +98,7 @@ class CourseRepository:
                 """
                 UPDATE courses
                 SET active = false
-                WHERE id = $1
+                WHERE id = $1;
                 """,
                 course_id,
             )

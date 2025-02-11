@@ -21,9 +21,9 @@ class BatchRepository:
                 await conn.execute(
                     """
                     INSERT INTO batch (id, branch, year, hod_id, counciller_id)
-                    VALUES ($1, $2, $3, $4, $5)
+                    VALUES ($1, $2, $3, $4, $5);
                     """,
-                    batch_id,
+                    str(batch_id),
                     create_batch.branch,
                     create_batch.year,
                     create_batch.hod_id,
@@ -60,7 +60,7 @@ class BatchRepository:
                 """
                 SELECT id, branch, year, hod_id, counciller_id, active, created_at
                 FROM batch
-                WHERE id = $1
+                WHERE id = $1;
                 """,
                 batch_id,
             )
@@ -86,7 +86,7 @@ class BatchRepository:
                     year = $2,
                     hod_id = $3,
                     counciller_id = $4,
-                WHERE id = $5
+                WHERE id = $5;
                 """,
                 update_batch.branch,
                 update_batch.year,
@@ -103,7 +103,7 @@ class BatchRepository:
                 """
                 UPDATE batch
                 SET active = false
-                WHERE id = $1
+                WHERE id = $1;
                 """,
                 batch_id,
             )
@@ -118,7 +118,7 @@ class BatchRepository:
                 """
                 SELECT id, branch, year, hod_id, counciller_id, active, created_at
                 FROM batch
-                WHERE branch = $1 AND year = $2
+                WHERE branch = $1 AND year = $2;
                 """,
                 branch,
                 year,

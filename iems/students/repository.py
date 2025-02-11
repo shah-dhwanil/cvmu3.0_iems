@@ -25,7 +25,7 @@ class StudentRepository:
                         id, first_name, last_name, enrollment_id,
                         gender, contact_no, email_id,batch_id,current_sem
                     )
-                    VALUES ($1, $2, $3, $4, $5, $6, $7,$8,$9)
+                    VALUES ($1, $2, $3, $4, $5, $6, $7,$8,$9);
                     """,
                     create_student.id,
                     create_student.first_name,
@@ -51,7 +51,7 @@ class StudentRepository:
                 SELECT id, first_name, last_name, enrollment_id,
                        gender, contact_no, email_id, active
                 FROM student
-                WHERE id = $1
+                WHERE id = $1;
                 """,
                 student_id,
             )
@@ -75,7 +75,7 @@ class StudentRepository:
                 """
                 SELECT id, enrollment_id, first_name, last_name
                 FROM student
-                WHERE active = true
+                WHERE active = true;
                 """
             )
             students = [
@@ -103,7 +103,7 @@ class StudentRepository:
                         gender = $4,
                         contact_no = $5,
                         email_id = $6
-                    WHERE id = $7
+                    WHERE id = $7;
                     """,
                     update_student.first_name,
                     update_student.last_name,
@@ -126,7 +126,7 @@ class StudentRepository:
                 """
                 UPDATE student
                 SET current_sem = $1
-                WHERE branch_id = $2
+                WHERE branch_id = $2;
                 """,
                 update_request.current_sem,
                 update_request.branch_id,
@@ -139,7 +139,7 @@ class StudentRepository:
                 """
                 UPDATE student
                 SET active = false
-                WHERE id = $1
+                WHERE id = $1;
                 """,
                 student_id,
             )

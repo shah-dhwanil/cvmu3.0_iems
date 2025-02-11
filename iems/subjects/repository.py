@@ -18,9 +18,9 @@ class SubjectRepository:
             await conn.execute(
                 """
                 INSERT INTO subjects (id, code, name, credits)
-                VALUES ($1, $2, $3, $4)
+                VALUES ($1, $2, $3, $4);
                 """,
-                subject_id,
+                str(subject_id),
                 create_subject.code,
                 create_subject.name,
                 create_subject.credits,
@@ -34,7 +34,7 @@ class SubjectRepository:
                 """
                 SELECT id, code, name, credits
                 FROM subjects
-                WHERE id = $1
+                WHERE id = $1;
                 """,
                 subject_id,
             )
@@ -53,7 +53,7 @@ class SubjectRepository:
             rows = await conn.fetch(
                 """
                 SELECT id, code, name, credits
-                FROM subjects
+                FROM subjects;
                 """
             )
             return [
@@ -75,7 +75,7 @@ class SubjectRepository:
                 """
                 UPDATE subjects
                 SET code = $1, name = $2, credits = $3
-                WHERE id = $4
+                WHERE id = $4;
                 """,
                 update_subject.code,
                 update_subject.name,
@@ -91,7 +91,7 @@ class SubjectRepository:
                 """
                 UPDATE subjects
                 SET active = false
-                WHERE id = $1
+                WHERE id = $1;
                 """,
                 subject_id,
             )
