@@ -16,7 +16,7 @@ app = Sanic(
 register_listners(app)
 register_middlewares(app)
 register_blueprints(app)
-
+app.config.CORS_ORIGIN = "*"
 
 @app.get("/")
 async def hello_world(request, **kwargs):

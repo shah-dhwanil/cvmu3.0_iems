@@ -10,7 +10,7 @@ from iems.courses.views import courses_bp
 from iems.attendence.views import attendence_bp
 from iems.leave.views import leave_bp
 from iems.achievements.views import achievements_bp
-
+from iems.resources.views import resources_bp
 
 def register_blueprints(app):
     app.blueprint(users_bp)
@@ -25,3 +25,4 @@ def register_blueprints(app):
     app.blueprint(attendence_bp)
     app.blueprint(leave_bp)
     app.blueprint(achievements_bp)
+    app.blueprint(resources_bp)
