@@ -18,6 +18,7 @@ register_middlewares(app)
 register_blueprints(app)
 app.config.CORS_ORIGINS = "*"
 
+
 @app.get("/")
 async def hello_world(request, **kwargs):
     return text("Hello World")
