@@ -55,7 +55,7 @@ class StaffRepository:
             )
             if row:
                 return GetStaffResponse(
-                    id=row["id"],
+                    id=str(row["id"]),
                     first_name=row["first_name"],
                     last_name=row["last_name"],
                     contact_no=row["contact_no"],
@@ -78,7 +78,7 @@ class StaffRepository:
             )
             staff_members = [
                 GetAllStaffResponse.Staff(
-                    id=row["id"], name=f"{row['first_name']} {row['last_name']}"
+                    id=str(row["id"]), name=f"{row['first_name']} {row['last_name']}"
                 )
                 for row in rows
             ]

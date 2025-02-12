@@ -38,7 +38,7 @@ async def create_student(request, data: CreateStudentRequest, **_):
 async def get_all_students(request):
     """Get all students"""
     student_list = await StudentRepository.get_all_students()
-    return JSONResponse(student_list.model_dump_json())
+    return JSONResponse(student_list.model_dump_json(),200)
 
 
 @student_bp.get("/<student_id:uuid>")

@@ -19,7 +19,7 @@ class ParentRepository:
             try:
                 await conn.execute(
                     """
-                    INSERT INTO parent (
+                    INSERT INTO parents (
                         id, student_id, father_name, mother_name,
                         contact_no, email_id
                     )
@@ -45,15 +45,15 @@ class ParentRepository:
                 """
                 SELECT id, student_id, father_name, mother_name,
                        contact_no, email_id, active
-                FROM parent
+                FROM parents
                 WHERE id = $1;
                 """,
                 parent_id,
             )
             if row:
                 return GetParentResponse(
-                    id=row["id"],
-                    student_id=row["student_id"],
+                    id=str(row["id"]),
+                    student_id=str(row["student_id"]),
                     father_name=row["father_name"],
                     mother_name=row["mother_name"],
                     contact_no=row["contact_no"],
@@ -69,15 +69,15 @@ class ParentRepository:
                 """
                 SELECT id, student_id, father_name, mother_name,
                        contact_no, email_id, active
-                FROM parent
+                FROM parents
                 WHERE student_id = $1;
                 """,
                 student_id,
             )
             if row:
                 return GetParentResponse(
-                    id=row["id"],
-                    student_id=row["student_id"],
+                    id=str(row["id"]),
+                    student_id=str(row["student_id"]),
                     father_name=row["father_name"],
                     mother_name=row["mother_name"],
                     contact_no=row["contact_no"],
@@ -94,7 +94,7 @@ class ParentRepository:
             try:
                 result = await conn.execute(
                     """
-                    UPDATE parent 
+                    UPDATE parents 
                     SET father_name = $1,
                         mother_name = $2,
                         contact_no = $3,
@@ -116,7 +116,7 @@ class ParentRepository:
         async with PGConnection.get_connection() as conn:
             result = await conn.execute(
                 """
-                UPDATE parent
+                UPDATE parents
                 SET active = false
                 WHERE id = $1;
                 """,

@@ -31,7 +31,7 @@ class UserRepository:
                     """,
                     str(user_id),
                     create_user.username,
-                    create_user.password,
+                    create_user.password.encode("UTF-8"),
                     create_user.role,
                     create_user.active,
                 )
@@ -53,7 +53,7 @@ class UserRepository:
             )
             if row:
                 return GetUserResponse(
-                    id=row["id"],
+                    id=str(row["id"]),
                     username=row["username"],
                     role=RoleEnum(row["role"]),
                     active=row["active"],

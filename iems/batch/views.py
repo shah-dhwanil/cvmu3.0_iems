@@ -13,6 +13,7 @@ from iems.batch.schemas import (
     CreateBatchRequest,
     CreateBatchResponse,
     EmptyResponse,
+    GetBatchByYear,
     MultipleCreateBatchResponse,
     UpdateBatchRequest,
     BatchNotFoundResponse,
@@ -35,13 +36,15 @@ async def create_batch(request, data: CreateBatchRequest, **_):
 async def create_batch_all(request, year: int, **_):
     created_batches = []
     for branch in config.BRANCH_LIST:
+        print(branch)
         try:
             batch_id = await BatchRepository.create_batch_all(year, branch)
-            created_batches.append(CreateBatchResponse(id=batch_id))
+            if batch_id is not None:
+                created_batches.append(CreateBatchResponse(id=batch_id))
         except StaffNotFoundError:
             return JSONResponse(StaffNotFoundResponse().model_dump_json(), 404)
     return JSONResponse(
-        MultipleCreateBatchResponse(ids=create_batch).model_dump_json(), 200
+        MultipleCreateBatchResponse(ids=created_batches).model_dump_json(), 200
     )
 
 
@@ -53,15 +56,22 @@ async def get_batch(request, batch_id: UUID, **_):
         return JSONResponse(BatchNotFoundResponse().model_dump_json(), 404)
     return JSONResponse(batch.model_dump_json(), 200)
 
+@batch_bp.get("/<year:int>")
+@not_allowed_roles([RoleEnum.STUDENT, RoleEnum.PARENTS])
+async def get_batch_year(request, year: int, **_):
+    batch = await BatchRepository.get_batch_year(year)
+    if batch is None:
+        return JSONResponse(BatchNotFoundResponse().model_dump_json(), 404)
+    return JSONResponse(GetBatchByYear(batches=batch).model_dump_json(), 200)
 
-@batch_bp.get("/<branch_name>/<year:int>")
+
+@batch_bp.get("/<branch_name:str>/<year:int>")
 @not_allowed_roles([RoleEnum.STUDENT, RoleEnum.PARENTS])
 async def get_batch_by_branch_and_year(request, branch_name: str, year: int, **_):
     batch = await BatchRepository.get_batch_by_branch_and_year(branch_name, year)
     if batch is None:
         return JSONResponse(BatchNotFoundResponse().model_dump_json(), 404)
     return JSONResponse(batch.model_dump_json(), 200)
-
 
 @batch_bp.patch("/<batch_id:uuid>")
 @require_roles([RoleEnum.ADMIN, RoleEnum.PRINCIPAL, RoleEnum.ACADEMIC_STAFF])

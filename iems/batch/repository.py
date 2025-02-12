@@ -29,7 +29,7 @@ class BatchRepository:
                     create_batch.hod_id,
                     create_batch.counciller_id,
                 )
-                return batch_id
+                return str(batch_id)
             except ForeignKeyViolationError:
                 raise StaffNotFoundError()
 
@@ -38,18 +38,34 @@ class BatchRepository:
         batch_id = uuid7()
         async with PGConnection.get_connection() as conn:
             try:
-                await conn.execute(
+                hod_id = await conn.fetchval(
                     """
-                    INSERT INTO batch (id, branch, year, hod_id, counciller_id)
-                    VALUES ($1, $2, $3, (SELECT hod_id FROM batch WHERE branch = $2 AND year = $3 - 1),
-                    (SELECT counciller_id FROM batch WHERE branch = $2 AND year = $3 - 1));
-                    ,
+                    SELECT hod_id FROM batch WHERE branch = $1 AND year = $2 - 1;
                     """,
-                    batch_id,
                     branch,
                     year,
                 )
-                return batch_id
+                counciller_id = await conn.fetchval(
+                    """
+                    SELECT counciller_id FROM batch WHERE branch = $1 AND year = $2 - 1;
+                    """,
+                    branch,
+                    year,
+                )
+                if hod_id is None or counciller_id is None:
+                    return
+                await conn.execute(
+                    """
+                    INSERT INTO batch (id, branch, year, hod_id, counciller_id)
+                    VALUES ($1, $2, $3,$4,$5);
+                    """,
+                    str(batch_id),
+                    branch,
+                    year,
+                    str(hod_id),
+                    str(counciller_id),
+                )
+                return str(batch_id)
             except ForeignKeyViolationError:
                 raise StaffNotFoundError()
 
@@ -58,7 +74,7 @@ class BatchRepository:
         async with PGConnection.get_connection() as conn:
             row = await conn.fetchrow(
                 """
-                SELECT id, branch, year, hod_id, counciller_id, active, created_at
+                SELECT id, branch, year, hod_id, counciller_id
                 FROM batch
                 WHERE id = $1;
                 """,
@@ -66,13 +82,11 @@ class BatchRepository:
             )
             if row:
                 return GetBatchResponse(
-                    id=row["id"],
+                    id=str(row["id"]),
                     branch=row["branch"],
                     year=row["year"],
-                    hod_id=row["hod_id"],
-                    counciller_id=row["counciller_id"],
-                    active=row["active"],
-                    created_at=row["created_at"],
+                    hod_id=str(row["hod_id"]),
+                    counciller_id=str(row["counciller_id"]),
                 )
             return None
 
@@ -116,7 +130,7 @@ class BatchRepository:
         async with PGConnection.get_connection() as conn:
             row = await conn.fetchrow(
                 """
-                SELECT id, branch, year, hod_id, counciller_id, active, created_at
+                SELECT id, branch, year, hod_id, counciller_id
                 FROM batch
                 WHERE branch = $1 AND year = $2;
                 """,
@@ -125,12 +139,31 @@ class BatchRepository:
             )
             if row:
                 return GetBatchResponse(
-                    id=row["id"],
+                    id=str(row["id"]),
                     branch=row["branch"],
                     year=row["year"],
-                    hod_id=row["hod_id"],
-                    counciller_id=row["counciller_id"],
-                    active=row["active"],
-                    created_at=row["created_at"],
+                    hod_id=str(row["hod_id"]),
+                    counciller_id=str(row["counciller_id"])
                 )
             return None
+    @staticmethod
+    async def get_batch_year(
+        year: int
+    ) -> Optional[GetBatchResponse]:
+        async with PGConnection.get_connection() as conn:
+            rows = await conn.fetch(
+                """
+                SELECT id, branch, year, hod_id, counciller_id
+                FROM batch
+                WHERE year = $1;
+                """,
+                year,
+            )
+            return [GetBatchResponse(
+                    id=str(row["id"]),
+                    branch=row["branch"],
+                    year=row["year"],
+                    hod_id=str(row["hod_id"]),
+                    counciller_id=str(row["counciller_id"]),
+                ) for row in rows]
+            

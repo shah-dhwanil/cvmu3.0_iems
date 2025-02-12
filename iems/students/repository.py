@@ -21,7 +21,7 @@ class StudentRepository:
             try:
                 await conn.execute(
                     """
-                    INSERT INTO student (
+                    INSERT INTO students (
                         id, first_name, last_name, enrollment_id,
                         gender, contact_no, email_id,batch_id,current_sem
                     )
@@ -50,14 +50,14 @@ class StudentRepository:
                 """
                 SELECT id, first_name, last_name, enrollment_id,
                        gender, contact_no, email_id, active
-                FROM student
+                FROM students
                 WHERE id = $1;
                 """,
                 student_id,
             )
             if row:
                 return GetStudentResponse(
-                    id=row["id"],
+                    id=str(row["id"]),
                     first_name=row["first_name"],
                     last_name=row["last_name"],
                     enrollment_id=row["enrollment_id"],
@@ -74,13 +74,13 @@ class StudentRepository:
             rows = await conn.fetch(
                 """
                 SELECT id, enrollment_id, first_name, last_name
-                FROM student
+                FROM students
                 WHERE active = true;
                 """
             )
             students = [
                 GetAllStudentsResponse.Student(
-                    id=row["id"],
+                    id=str(row["id"]),
                     enrollment_id=row["enrollment_id"],
                     name=f"{row['first_name']} {row['last_name']}",
                 )
@@ -96,7 +96,7 @@ class StudentRepository:
             try:
                 result = await conn.execute(
                     """
-                    UPDATE student 
+                    UPDATE students
                     SET first_name = $1,
                         last_name = $2,
                         enrollment_id = $3,
@@ -124,9 +124,9 @@ class StudentRepository:
         async with PGConnection.get_connection() as conn:
             await conn.execute(
                 """
-                UPDATE student
+                UPDATE students
                 SET current_sem = $1
-                WHERE branch_id = $2;
+                WHERE batch_id = $2;
                 """,
                 update_request.current_sem,
                 update_request.branch_id,
@@ -137,7 +137,7 @@ class StudentRepository:
         async with PGConnection.get_connection() as conn:
             result = await conn.execute(
                 """
-                UPDATE student
+                UPDATE students
                 SET active = false
                 WHERE id = $1;
                 """,

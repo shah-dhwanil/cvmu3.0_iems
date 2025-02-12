@@ -22,7 +22,7 @@ async def login(request, data: LoginRequest, **_):
     token_payload = await AuthRepository.authenticate_user(data)
     if not token_payload:
         return JSONResponse(InvalidCredentials().model_dump_json(), 401)
-    token_payload.exp = datetime.now(timezone.utc) + timedelta(minutes=15)
+    token_payload.exp = datetime.now(timezone.utc) + timedelta(hours=15)
     token = encode(SECRET_KEY, token_payload.model_dump_json())
     return JSONResponse(
         LoginResponse(token=token, role=token_payload.role).model_dump_json(), 200

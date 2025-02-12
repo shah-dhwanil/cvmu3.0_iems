@@ -24,7 +24,7 @@ from iems.users.schemas import (
 async def create_user(request, data: CreateUserRequest, **_):
     try:
         user_id = await UserRepository.create_user(data)
-        return JSONResponse(CreateUserResponse(id=user_id).model_dump_json(), 200)
+        return JSONResponse(CreateUserResponse(id=str(user_id)).model_dump_json(), 200)
     except UsernameAlreadyExistsException:
         return JSONResponse(UsernameAlreadyExistsResponse().model_dump_json(), 409)
 

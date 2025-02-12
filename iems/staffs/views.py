@@ -35,7 +35,7 @@ async def create_staff(request, data: CreateStaffRequest, **_):
 async def get_all_staff(request):
     """Get all staff members"""
     staff_list = await StaffRepository.get_all_staff()
-    return JSONResponse(staff_list.model_dump_json())
+    return JSONResponse(staff_list.model_dump_json(),200)
 
 
 @staff_bp.get("/<staff_id:uuid>")

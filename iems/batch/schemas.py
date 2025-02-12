@@ -5,7 +5,7 @@ from uuid import UUID
 
 class CreateBatchRequest(BaseModel):
     branch: str = Field(..., max_length=255)
-    year: int = Field(..., ge=1900, le=2100)
+    year: int = Field(...)
     hod_id: UUID
     counciller_id: UUID
     active: Optional[bool] = True
@@ -25,8 +25,9 @@ class GetBatchResponse(BaseModel):
     year: int
     hod_id: UUID
     counciller_id: UUID
-    active: bool
-    created_at: str
+
+class GetBatchByYear(BaseModel):
+    batches: list[GetBatchResponse]
 
 
 class UpdateBatchRequest(BaseModel):
