@@ -13,7 +13,7 @@ from iems.achievements.views import achievements_bp
 from iems.resources.views import resources_bp
 from iems.fees.views import fees_bp
 from iems.placements.views import placements_bp
-
+from iems.files.views import files_bp
 
 def register_blueprints(app):
     app.blueprint(users_bp)
@@ -31,3 +31,4 @@ def register_blueprints(app):
     app.blueprint(resources_bp)
     app.blueprint(fees_bp)
     app.blueprint(placements_bp)
+    app.blueprint(files_bp)
