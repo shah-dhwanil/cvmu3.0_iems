@@ -10,7 +10,7 @@ app = Sanic(
     "iems",
     dumps=dumps,
     loads=loads,
-    error_handler=ErrorHandler(),
+    #error_handler=ErrorHandler(),
     configure_logging=False,
 )
 register_listners(app)

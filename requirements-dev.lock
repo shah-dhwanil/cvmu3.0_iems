@@ -19,44 +19,156 @@ argon2-cffi==23.1.0
     # via pyseto
 argon2-cffi-bindings==21.2.0
     # via argon2-cffi
+asttokens==3.0.0
+    # via stack-data
 asyncpg==0.30.0
     # via iems
+cachetools==5.5.1
+    # via google-auth
+certifi==2025.1.31
+    # via requests
 cffi==1.17.1
     # via argon2-cffi-bindings
     # via cryptography
+charset-normalizer==3.4.1
+    # via requests
+comm==0.2.2
+    # via ipykernel
 cryptography==44.0.0
     # via pyseto
+debugpy==1.8.12
+    # via ipykernel
+decorator==5.1.1
+    # via ipython
 dnspython==2.7.0
     # via email-validator
 email-validator==2.2.0
     # via iems
+executing==2.2.0
+    # via stack-data
+google-ai-generativelanguage==0.6.15
+    # via google-generativeai
+    # via iems
+google-api-core==2.24.1
+    # via google-ai-generativelanguage
+    # via google-api-python-client
+    # via google-generativeai
+google-api-python-client==2.160.0
+    # via google-generativeai
+google-auth==2.38.0
+    # via google-ai-generativelanguage
+    # via google-api-core
+    # via google-api-python-client
+    # via google-auth-httplib2
+    # via google-genai
+    # via google-generativeai
+google-auth-httplib2==0.2.0
+    # via google-api-python-client
+google-genai==1.1.0
+    # via iems
+google-generativeai==0.8.4
+    # via iems
+googleapis-common-protos==1.66.0
+    # via google-api-core
+    # via grpcio-status
+grpcio==1.70.0
+    # via google-api-core
+    # via grpcio-status
+grpcio-status==1.70.0
+    # via google-api-core
 html5tagger==1.3.0
     # via sanic
     # via tracerite
+httplib2==0.22.0
+    # via google-api-python-client
+    # via google-auth-httplib2
 httptools==0.6.4
     # via sanic
 idna==3.10
     # via email-validator
+    # via requests
+ipykernel==6.29.5
+ipython==8.32.0
+    # via ipykernel
 iso8601==2.1.0
     # via pyseto
+jedi==0.19.2
+    # via ipython
+jupyter-client==8.6.3
+    # via ipykernel
+jupyter-core==5.7.2
+    # via ipykernel
+    # via jupyter-client
+matplotlib-inline==0.1.7
+    # via ipykernel
+    # via ipython
 multidict==6.1.0
     # via sanic
+nest-asyncio==1.6.0
+    # via ipykernel
 orjson==3.10.15
     # via iems
+packaging==24.2
+    # via ipykernel
+parso==0.8.4
+    # via jedi
+pexpect==4.9.0
+    # via ipython
+platformdirs==4.3.6
+    # via jupyter-core
+prompt-toolkit==3.0.50
+    # via ipython
+proto-plus==1.26.0
+    # via google-ai-generativelanguage
+    # via google-api-core
+protobuf==5.29.3
+    # via google-ai-generativelanguage
+    # via google-api-core
+    # via google-generativeai
+    # via googleapis-common-protos
+    # via grpcio-status
+    # via proto-plus
+psutil==6.1.1
+    # via ipykernel
+ptyprocess==0.7.0
+    # via pexpect
+pure-eval==0.2.3
+    # via stack-data
+pyasn1==0.6.1
+    # via pyasn1-modules
+    # via rsa
+pyasn1-modules==0.4.1
+    # via google-auth
 pycparser==2.22
     # via cffi
 pycryptodomex==3.21.0
     # via pyseto
 pydantic==2.10.6
+    # via google-genai
+    # via google-generativeai
     # via iems
 pydantic-core==2.27.2
     # via pydantic
+pygments==2.19.1
+    # via ipython
+pyparsing==3.2.1
+    # via httplib2
 pyseto==1.8.2
     # via iems
+python-dateutil==2.9.0.post0
+    # via jupyter-client
 python-dotenv==1.0.1
     # via iems
 pyyaml==6.0.2
     # via sanic-ext
+pyzmq==26.2.1
+    # via ipykernel
+    # via jupyter-client
+requests==2.32.3
+    # via google-api-core
+    # via google-genai
+rsa==4.9
+    # via google-auth
 sanic==24.12.0
     # via iems
 sanic-ext==23.12.0
@@ -65,19 +177,43 @@ sanic-routing==23.12.0
     # via sanic
 setuptools==75.8.0
     # via sanic
+six==1.17.0
+    # via python-dateutil
+stack-data==0.6.3
+    # via ipython
 structlog==25.1.0
     # via iems
+tornado==6.4.2
+    # via ipykernel
+    # via jupyter-client
+tqdm==4.67.1
+    # via google-generativeai
 tracerite==1.1.1
     # via sanic
+traitlets==5.14.3
+    # via comm
+    # via ipykernel
+    # via ipython
+    # via jupyter-client
+    # via jupyter-core
+    # via matplotlib-inline
 typing-extensions==4.12.2
+    # via google-generativeai
     # via pydantic
     # via pydantic-core
     # via sanic
 ujson==5.10.0
     # via sanic
+uritemplate==4.1.1
+    # via google-api-python-client
+urllib3==2.3.0
+    # via requests
 uuid-utils==0.10.0
     # via iems
 uvloop==0.21.0
     # via sanic
+wcwidth==0.2.13
+    # via prompt-toolkit
 websockets==14.2
+    # via google-genai
     # via sanic

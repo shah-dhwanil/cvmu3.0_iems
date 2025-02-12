@@ -2,12 +2,14 @@ from uuid import UUID
 from iems.auth.schemas import AccessDenied
 from iems.base.response import JSONResponse
 from iems.base.decorators import validate
+from iems.files.repository import FilesRepository
 from iems.users.exceptions import UserNotFoundException
 from iems.users.schemas import RoleEnum, UserNotFoundResponse
 from iems.auth.decorators import not_allowed_roles, require_roles
 from iems.students.blueprint import student_bp
 from iems.students.repository import StudentRepository
 from iems.students.exceptions import StudentAlreadyExistsError
+from iems.students.extract_aadhaar import extract_aadhaar as extract_aadhaar_genai
 
 from iems.students.schemas import (
     CreateStudentRequest,
@@ -95,3 +97,14 @@ async def delete_student(request, student_id: UUID):
     if success:
         return JSONResponse(EmptyResponse().model_dump_json(), 200)
     return JSONResponse(StudentNotFoundResponse().model_dump_json(), 404)
+
+
+@student_bp.get("/extract_aadhaar/<uid:uuid>")
+async def extract_aadhaar(request,uid:UUID):
+    """Extract aadhaar numbers of all students"""
+    response = await FilesRepository.get_file(uid)
+    #return JSONResponse(loads({"file_path":response[0]}), 200)
+    if response is not None:
+        response = extract_aadhaar_genai(str(response[0]),response[2])
+        print(type(response))
+    return JSONResponse(response, 200)

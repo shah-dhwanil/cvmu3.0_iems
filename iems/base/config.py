@@ -16,6 +16,7 @@ class Config(BaseModel):
     PASETO_SECRET_KEY: str
     PUBLIC_ROUTES: list[str]
     BRANCH_LIST: list[str]
+    GOOGLE_API_KEY: str
 
     @staticmethod
     def __get_toml_config(environment: str):
