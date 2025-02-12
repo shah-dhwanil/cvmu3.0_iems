@@ -10,6 +10,7 @@ from iems.students.blueprint import student_bp
 from iems.students.repository import StudentRepository
 from iems.students.exceptions import StudentAlreadyExistsError
 from iems.students.extract_aadhaar import extract_aadhaar as extract_aadhaar_genai
+from iems.students.extract_result import extract_result as extract_result_genai
 
 from iems.students.schemas import (
     CreateStudentRequest,
@@ -106,5 +107,15 @@ async def extract_aadhaar(request,uid:UUID):
     #return JSONResponse(loads({"file_path":response[0]}), 200)
     if response is not None:
         response = extract_aadhaar_genai(str(response[0]),response[2])
+        print(type(response))
+    return JSONResponse(response, 200)
+
+@student_bp.get("/extract_result/<uid:uuid>")
+async def extract_result(request,uid:UUID):
+    """Extract details from last result of all students"""
+    response = await FilesRepository.get_file(uid)
+    #return JSONResponse(loads({"file_path":response[0]}), 200)
+    if response is not None:
+        response = extract_result_genai(str(response[0]),response[2])
         print(type(response))
     return JSONResponse(response, 200)
