@@ -1,3 +1,4 @@
+from decimal import Decimal
 from pydantic import BaseModel, Field
 from typing import Optional
 from uuid import UUID
@@ -14,7 +15,7 @@ class CreatePlacementRequest(BaseModel, use_enum_values=True):
     student_id: UUID
     company_name: str = Field(..., max_length=64)
     role: str = Field(..., max_length=64)
-    package: float = Field(..., decimal_places=2)
+    package: Decimal = Field(..., decimal_places=2)
     status: Optional[PlacementStatus] = PlacementStatus.OFFERED
     letter_uid: Optional[UUID] = None
 

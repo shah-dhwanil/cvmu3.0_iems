@@ -11,6 +11,7 @@ from iems.users.schemas import RoleEnum
 from iems.semister.schemas import (
     CreateSemisterRequest,
     CreateSemisterResponse,
+    GetSemisterByBranchResponse,
     UpdateSemisterRequest,
     SemisterNotFoundResponse,
     EmptyResponse,
@@ -38,6 +39,11 @@ async def get_semister(request, semister_id: UUID, **_):
         return JSONResponse(SemisterNotFoundResponse().model_dump_json(), 404)
     return JSONResponse(semister.model_dump_json(), 200)
 
+@semister_bp.get("/branch/<branch_id:uuid>")
+@not_allowed_roles([RoleEnum.STUDENT, RoleEnum.PARENTS])
+async def get_semister_by_branch(request, branch_id: UUID, **_):
+    semisters = await SemisterRepository.get_semister_by_branch(branch_id)
+    return JSONResponse(GetSemisterByBranchResponse(semisters=semisters).model_dump_json(), 200)
 
 @semister_bp.patch("/<semister_id:uuid>")
 @require_roles([RoleEnum.ADMIN, RoleEnum.PRINCIPAL, RoleEnum.ACADEMIC_STAFF])

@@ -31,7 +31,7 @@ class PlacementRepository:
                 create_placement.status,
                 create_placement.letter_uid,
             )
-            return row["id"]
+            return str(row["id"])
 
     @staticmethod
     async def get_placement(placement_id: UUID) -> Optional[GetPlacementResponse]:
@@ -47,8 +47,8 @@ class PlacementRepository:
             )
             if row:
                 return GetPlacementResponse(
-                    id=row["id"],
-                    student_id=row["student_id"],
+                    id=str(row["id"]),
+                    student_id=str(row["student_id"]),
                     company_name=row["company_name"],
                     role=row["role"],
                     package=float(row["package"]),
@@ -71,8 +71,8 @@ class PlacementRepository:
             )
             return [
                 GetPlacementResponse(
-                    id=row["id"],
-                    student_id=row["student_id"],
+                    id=str(row["id"]),
+                    student_id=str(row["student_id"]),
                     company_name=row["company_name"],
                     role=row["role"],
                     package=float(row["package"]),

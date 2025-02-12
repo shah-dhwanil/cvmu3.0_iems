@@ -28,7 +28,7 @@ class AchievementRepository:
                 create_achievement.pos,
                 create_achievement.docs_id,
             )
-            return achievement_id
+            return str(achievement_id)
 
     @staticmethod
     async def get_achievement(achievement_id: UUID) -> Optional[GetAchievementResponse]:
@@ -43,8 +43,8 @@ class AchievementRepository:
             )
             if row:
                 return GetAchievementResponse(
-                    id=row["id"],
-                    student_id=row["student_id"],
+                    id=str(row["id"]),
+                    student_id=str(row["student_id"]),
                     name=row["name"],
                     type=row["type"],
                     pos=row["pos"],
@@ -68,8 +68,8 @@ class AchievementRepository:
             )
             achievements = [
                 GetAchievementResponse(
-                    id=row["id"],
-                    student_id=row["student_id"],
+                    id=str(row["id"]),
+                    student_id=str(row["student_id"]),
                     name=row["name"],
                     type=row["type"],
                     pos=row["pos"],

@@ -18,8 +18,9 @@ class GetSemisterResponse(BaseModel):
     batch_id: UUID
     sem_no: int
     ongoing: bool
-    active: bool
 
+class GetSemisterByBranchResponse(BaseModel):
+    semisters: list[GetSemisterResponse]
 
 class UpdateSemisterRequest(BaseModel):
     batch_id: Optional[UUID]

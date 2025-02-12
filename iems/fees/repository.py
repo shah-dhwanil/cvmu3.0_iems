@@ -31,7 +31,7 @@ class FeesRepository:
                 create_fees.transaction_id,
                 create_fees.amount,
             )
-            return CreateFeesResponse(id=row["id"], recipt_id=row["recipt_id"])
+            return CreateFeesResponse(id=str(row["id"]), recipt_id=row["recipt_id"])
 
     @staticmethod
     async def get_fees(fees_id: UUID) -> Optional[GetFeesResponse]:
@@ -46,10 +46,10 @@ class FeesRepository:
             )
             if row:
                 return GetFeesResponse(
-                    id=row["id"],
+                    id=str(row["id"]),
                     recipt_id=row["recipt_id"],
                     date=row["date"],
-                    student_id=row["student_id"],
+                    student_id=str(row["student_id"]),
                     type=row["type"],
                     payment_type=row["payment_type"],
                     transaction_id=row["transaction_id"],
@@ -71,10 +71,10 @@ class FeesRepository:
             )
             fees_list = [
                 GetFeesResponse(
-                    id=row["id"],
+                    id=str(row["id"]),
                     recipt_id=row["recipt_id"],
                     date=row["date"],
-                    student_id=row["student_id"],
+                    student_id=str(row["student_id"]),
                     type=row["type"],
                     payment_type=row["payment_type"],
                     transaction_id=row["transaction_id"],

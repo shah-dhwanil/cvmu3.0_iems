@@ -21,7 +21,6 @@ class GetCourseResponse(BaseModel):
     sem_id: UUID
     subject_id: UUID
     taught_by: UUID
-    active: bool
 
 
 class GetCourseTaughtBy(BaseModel):

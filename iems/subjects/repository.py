@@ -25,7 +25,7 @@ class SubjectRepository:
                 create_subject.name,
                 create_subject.credits,
             )
-            return subject_id
+            return str(subject_id)
 
     @staticmethod
     async def get_subject(subject_id: UUID) -> Optional[GetSubjectResponse]:
@@ -40,7 +40,7 @@ class SubjectRepository:
             )
             if row:
                 return GetSubjectResponse(
-                    id=row["id"],
+                    id=str(row["id"]),
                     code=row["code"],
                     name=row["name"],
                     credits=row["credits"],
@@ -58,7 +58,7 @@ class SubjectRepository:
             )
             return [
                 GetSubjectResponse(
-                    id=row["id"],
+                    id=str(row["id"]),
                     code=row["code"],
                     name=row["name"],
                     credits=row["credits"],

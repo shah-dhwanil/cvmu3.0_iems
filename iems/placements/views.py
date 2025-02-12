@@ -10,6 +10,7 @@ from iems.placements.blueprint import placements_bp
 from iems.placements.schemas import (
     CreatePlacementRequest,
     CreatePlacementResponse,
+    GetPlacementByStudentResponse,
     UpdatePlacementRequest,
     PlacementNotFoundResponse,
     EmptyResponse,
@@ -52,7 +53,7 @@ async def get_placements_by_student(request, student_id: UUID, **_):
         return JSONResponse(AccessDenied().model_dump_json(), 403)
 
     placements = await PlacementRepository.get_placements_by_student(student_id)
-    return JSONResponse([p.model_dump() for p in placements], 200)
+    return JSONResponse(GetPlacementByStudentResponse(placements=placements).model_dump_json(), 200)
 
 
 @placements_bp.patch("/<placement_id:uuid>")

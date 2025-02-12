@@ -27,7 +27,7 @@ class CourseRepository:
                 create_course.subject_id,
                 create_course.taught_by,
             )
-            return course_id
+            return str(course_id)
 
     @staticmethod
     async def get_course(course_id: UUID) -> Optional[GetCourseResponse]:
@@ -42,29 +42,29 @@ class CourseRepository:
             )
             if row:
                 return GetCourseResponse(
-                    id=row["id"],
-                    sem_id=row["sem_id"],
-                    subject_id=row["subject_id"],
-                    taught_by=row["taught_by"],
-                    active=row["active"],
+                    id=str(row["id"]),
+                    sem_id=str(row["sem_id"]),
+                    subject_id=str(row["subject_id"]),
+                    taught_by=str(row["taught_by"]),
                 )
             return None
 
     @staticmethod
-    async def get_course_by_student_id(student_id: UUID) -> list[GetCourseTaughtBy]:
+    async def get_course_by_student_id(student_id: UUID) -> list[GetCouseByStudentId.Course]:
         async with PGConnection.get_connection() as conn:
             row = await conn.fetch(
                 """
                 SELECT courses.id,subjects.name,courses.taught_by FROM courses
                 INNER JOIN semister ON courses.sem_id = semister.id
                 INNER JOIN batch ON semister.batch_id = batch.id
+                INNER JOIN students ON students.batch_id =batch.id
                 INNER JOIN subjects ON courses.subject_id = subjects.id
-                WHERE students.id = $1 courses.sem_id = students.cuur_sem;
+                WHERE courses.sem_id = students.current_sem AND students.id = $1;
                 """,
                 student_id,
             )
             return [
-                GetCouseByStudentId(id=r["id"], name=r["name"], by=r["taught_by"])
+                GetCouseByStudentId.Course(id=str(r["id"]), name=r["name"], by=str(r["taught_by"]))
                 for r in row
             ]
 
@@ -84,7 +84,7 @@ class CourseRepository:
             )
             return [
                 GetCourseTaughtBy(
-                    id=r["id"], name=r["name"], branch=r["branch"], year=r["year"]
+                    id=str(r["id"]), name=r["name"], branch=r["branch"], year=r["year"]
                 )
                 for r in row
             ]

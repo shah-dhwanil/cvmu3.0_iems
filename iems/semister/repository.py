@@ -28,7 +28,7 @@ class SemisterRepository:
                     create_semister.sem_no,
                     create_semister.ongoing,
                 )
-                return semister_id
+                return str(semister_id)
             except ForeignKeyViolationError:
                 raise BatchNotFoundError()
 
@@ -45,13 +45,32 @@ class SemisterRepository:
             )
             if row:
                 return GetSemisterResponse(
-                    id=row["id"],
-                    batch_id=row["batch_id"],
+                    id=str(row["id"]),
+                    batch_id=str(row["batch_id"]),
                     sem_no=row["sem_no"],
                     ongoing=row["ongoing"],
-                    active=row["active"],
                 )
             return None
+    
+    
+
+    @staticmethod
+    async def get_semister_by_branch(branch_id: UUID) -> list[GetSemisterResponse]:
+        async with PGConnection.get_connection() as conn:
+            rows = await conn.fetch(
+                """
+                SELECT id, batch_id, sem_no, ongoing, active
+                FROM semister
+                WHERE batch_id = $1;
+                """,
+                branch_id,
+            )
+            return[GetSemisterResponse(
+                    id=str(row["id"]),
+                    batch_id=str(row["batch_id"]),
+                    sem_no=row["sem_no"],
+                    ongoing=row["ongoing"],
+                ) for row in rows]
 
     @staticmethod
     async def update_semister(

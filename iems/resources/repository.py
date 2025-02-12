@@ -28,7 +28,7 @@ class ResourceRepository:
                 create_resource.type,
                 create_resource.docs_id,
             )
-            return resource_id
+            return str(resource_id)
 
     @staticmethod
     async def get_resource(resource_id: UUID) -> Optional[GetResourceResponse]:
@@ -43,11 +43,11 @@ class ResourceRepository:
             )
             if row:
                 return GetResourceResponse(
-                    id=row["id"],
-                    subject_id=row["subject_id"],
+                    id=str(row["id"]),
+                    subject_id=str(row["subject_id"]),
                     title=row["title"],
                     shared_at=row["shared_at"],
-                    shared_by=row["shared_by"],
+                    shared_by=str(row["shared_by"]),
                     type=ResourceTypeEnum(row["type"]),
                     docs_id=row["docs_id"],
                 )
@@ -95,11 +95,11 @@ class ResourceRepository:
             )
             return [
                 GetResourceResponse(
-                    id=row["id"],
-                    subject_id=row["subject_id"],
+                    id=str(row["id"]),
+                    subject_id=str(row["subject_id"]),
                     title=row["title"],
                     shared_at=row["shared_at"],
-                    shared_by=row["shared_by"],
+                    shared_by=str(row["shared_by"]),
                     type=ResourceTypeEnum(row["type"]),
                     docs_id=row["docs_id"],
                 )

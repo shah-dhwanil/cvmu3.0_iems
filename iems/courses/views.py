@@ -3,7 +3,7 @@ from iems.courses.blueprint import courses_bp
 from iems.courses.repository import CourseRepository
 from iems.base.decorators import validate
 from iems.base.response import JSONResponse
-from iems.auth.decorators import require_roles
+from iems.auth.decorators import not_allowed_roles, require_roles
 from iems.users.schemas import RoleEnum
 
 from iems.courses.schemas import (
@@ -11,6 +11,7 @@ from iems.courses.schemas import (
     CreateCourseResponse,
     CourseNotFoundResponse,
     GetCourseTaughtByResponse,
+    GetCouseByStudentId,
     UpdateCourseRequest,
     EmptyResponse,
 )
@@ -42,6 +43,13 @@ async def get_course_by_teacher(request, teacher_id: UUID, **_):
         GetCourseTaughtByResponse(courses=courses).model_dump_json(), 200
     )
 
+@courses_bp.get("/student/<student_id:uuid>")
+@not_allowed_roles([RoleEnum.PARENTS])
+async def get_course_by_student(request, student_id: UUID, **_):
+    courses = await CourseRepository.get_course_by_student_id(student_id)
+    return JSONResponse(
+        GetCouseByStudentId(courses=courses).model_dump_json(), 200
+    )
 
 @courses_bp.patch("/<course_id:uuid>")
 @require_roles([RoleEnum.ADMIN, RoleEnum.PRINCIPAL, RoleEnum.ACADEMIC_STAFF])
