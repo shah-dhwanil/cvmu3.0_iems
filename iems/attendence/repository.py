@@ -81,6 +81,33 @@ class AttendenceRepository:
             )
 
     @staticmethod
+    async def get_attendence_by_course_and_student_id(
+        course_id: UUID, student_id: UUID
+    ) -> GetAttendenceByCourseIdAndClassTimeResponse:
+        async with PGConnection.get_connection() as conn:
+            rows = await conn.fetch(
+                """
+                SELECT id, student_id, present, dont_care
+                FROM attendence
+                WHERE course_id = $1 AND student_id = $2;
+                """,
+                course_id,
+            )
+            records = [
+                GetAttendenceByCourseIdAndClassTimeResponse.AttendenceRecord(
+                    id=row["id"],
+                    student_id=row["student_id"],
+                    present=row["present"],
+                    dont_care=row["dont_care"],
+                )
+                for row in rows
+            ]
+            return GetAttendenceByCourseIdAndClassTimeResponse(
+                attendence_records=records
+            )
+
+
+    @staticmethod
     async def get_attendence_by_student(student_id: UUID) -> GetAttendenceByStudentId:
         async with PGConnection.get_connection() as conn:
             rows = await conn.fetch(

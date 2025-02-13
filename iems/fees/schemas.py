@@ -21,7 +21,7 @@ class FeesTypeEnum(str, Enum):
 
 class CreateFeesRequest(BaseModel, use_enum_values=True):
     date: date
-    student_id: UUID
+    enrollment_id: str
     type: FeesTypeEnum
     payment_type: PaymentTypeEnum
     transaction_id: str = Field(..., max_length=128)

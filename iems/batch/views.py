@@ -49,7 +49,7 @@ async def create_batch_all(request, year: int, **_):
 
 
 @batch_bp.get("/<batch_id:uuid>")
-@not_allowed_roles([RoleEnum.STUDENT, RoleEnum.PARENTS])
+#@not_allowed_roles([RoleEnum.STUDENT, RoleEnum.PARENTS])
 async def get_batch(request, batch_id: UUID, **_):
     batch = await BatchRepository.get_batch(batch_id)
     if batch is None:

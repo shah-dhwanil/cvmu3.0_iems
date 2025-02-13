@@ -45,14 +45,9 @@ async def get_all_students(request):
 
 
 @student_bp.get("/<student_id:uuid>")
-@not_allowed_roles([RoleEnum.STUDENT, RoleEnum.PARENTS])
+@require_roles([RoleEnum.STUDENT, RoleEnum.PARENTS])
 async def get_student(request, student_id: UUID = None):
     """Get student by ID"""
-    if (
-        request.ctx.user.role == RoleEnum.STUDENT
-        and request.ctx.user.user_id != student_id
-    ):
-        return JSONResponse(AccessDenied().model_dump_json(), 403)
     student = await StudentRepository.get_student(student_id)
     if student:
         return JSONResponse(student.model_dump_json(), 200)

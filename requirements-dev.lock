@@ -110,6 +110,7 @@ orjson==3.10.15
     # via iems
 packaging==24.2
     # via ipykernel
+    # via sanic-cors
 parso==0.8.4
     # via jedi
 pexpect==4.9.0
@@ -159,8 +160,6 @@ python-dateutil==2.9.0.post0
     # via jupyter-client
 python-dotenv==1.0.1
     # via iems
-pyyaml==6.0.2
-    # via sanic-ext
 pyzmq==26.2.1
     # via ipykernel
     # via jupyter-client
@@ -171,7 +170,8 @@ rsa==4.9
     # via google-auth
 sanic==24.12.0
     # via iems
-sanic-ext==23.12.0
+    # via sanic-cors
+sanic-cors==2.2.0
     # via iems
 sanic-routing==23.12.0
     # via sanic

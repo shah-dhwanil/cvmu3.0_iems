@@ -19,6 +19,13 @@ class CreatePlacementRequest(BaseModel, use_enum_values=True):
     status: Optional[PlacementStatus] = PlacementStatus.OFFERED
     letter_uid: Optional[UUID] = None
 
+class CreatePlacementEnrollRequest(BaseModel):
+    enroll_id:str
+    company_name: str = Field(..., max_length=64)
+    role: str = Field(..., max_length=64)
+    package: Decimal = Field(..., decimal_places=2)
+    status: Optional[PlacementStatus] = PlacementStatus.OFFERED
+    letter_uid: Optional[UUID] = None
 
 class CreatePlacementResponse(BaseModel):
     id: UUID

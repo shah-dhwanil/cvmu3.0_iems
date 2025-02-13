@@ -25,5 +25,5 @@ async def login(request, data: LoginRequest, **_):
     token_payload.exp = datetime.now(timezone.utc) + timedelta(hours=15)
     token = encode(SECRET_KEY, token_payload.model_dump_json())
     return JSONResponse(
-        LoginResponse(token=token, role=token_payload.role).model_dump_json(), 200
+        LoginResponse(token=token, role=token_payload.role,user_id=token_payload.user_id).model_dump_json(), 200
     )

@@ -3,6 +3,7 @@ from typing import Optional, List
 from iems.base.postgres import PGConnection
 
 from iems.placements.schemas import (
+    CreatePlacementEnrollRequest,
     CreatePlacementRequest,
     GetPlacementResponse,
     UpdatePlacementRequest,
@@ -32,21 +33,41 @@ class PlacementRepository:
                 create_placement.letter_uid,
             )
             return str(row["id"])
-
     @staticmethod
-    async def get_placement(placement_id: UUID) -> Optional[GetPlacementResponse]:
+    async def create_placement_by_student(create_placement: CreatePlacementEnrollRequest) -> UUID:
         async with PGConnection.get_connection() as conn:
+            uid = await conn.fetchval("SELECT id FROM students WHERE enrollment_id = $1",create_placement.enroll_id)
             row = await conn.fetchrow(
+                """
+                INSERT INTO placement (
+                    student_id, company_name, role, package, 
+                    status, letter_uid
+                )
+                VALUES ($1, $2, $3, $4, $5, $6)
+                RETURNING id;
+                """,
+                uid,
+                create_placement.company_name,
+                create_placement.role,
+                create_placement.package,
+                create_placement.status,
+                create_placement.letter_uid,
+            )
+            return str(row["id"])
+    @staticmethod
+    async def get_placements(student_id: UUID) -> List[GetPlacementResponse]:
+        async with PGConnection.get_connection() as conn:
+            rows = await conn.fetch(
                 """
                 SELECT id, student_id, company_name, role, 
                        package, status, letter_uid
                 FROM placement
-                WHERE id = $1;
+                WHERE student_id = $1;
                 """,
-                placement_id,
+                student_id,
             )
-            if row:
-                return GetPlacementResponse(
+            return [
+                GetPlacementResponse(
                     id=str(row["id"]),
                     student_id=str(row["student_id"]),
                     company_name=row["company_name"],
@@ -55,7 +76,31 @@ class PlacementRepository:
                     status=PlacementStatus(row["status"]),
                     letter_uid=row["letter_uid"],
                 )
-            return None
+                for row in rows
+            ]
+    @staticmethod
+    async def get_placement() -> Optional[GetPlacementResponse]:
+        async with PGConnection.get_connection() as conn:
+            rows = await conn.fetch(
+                """
+                SELECT id, student_id, company_name, role, 
+                       package, status, letter_uid
+                FROM placement;
+                """
+            )
+            return [
+                GetPlacementResponse(
+                    id=str(row["id"]),
+                    student_id=str(row["student_id"]),
+                    company_name=row["company_name"],
+                    role=row["role"],
+                    package=float(row["package"]),
+                    status=PlacementStatus(row["status"]),
+                    letter_uid=row["letter_uid"],
+                )
+                for row in rows
+            ]
+
 
     @staticmethod
     async def get_placements_by_student(student_id: UUID) -> List[GetPlacementResponse]:
@@ -102,7 +147,8 @@ class PlacementRepository:
                 update_placement.package,
                 update_placement.letter_uid,
             )
-            return result == "UPDATE 1"
+            return True
+            #return result == "UPDATE 1"
 
     @staticmethod
     async def update_placement_status(
@@ -118,6 +164,7 @@ class PlacementRepository:
                 placement_id,
                 update_status.status,
             )
+            return True
             return result == "UPDATE 1"
 
     @staticmethod

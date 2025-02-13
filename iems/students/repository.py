@@ -49,7 +49,7 @@ class StudentRepository:
             row = await conn.fetchrow(
                 """
                 SELECT id, first_name, last_name, enrollment_id,
-                       gender, contact_no, email_id, active
+                       gender, contact_no, email_id, active,batch_id
                 FROM students
                 WHERE id = $1;
                 """,
@@ -65,6 +65,7 @@ class StudentRepository:
                     contact_no=row["contact_no"],
                     email_id=row["email_id"],
                     active=row["active"],
+                    batch_id=str(row["batch_id"]),
                 )
             return None
 

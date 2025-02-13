@@ -3,7 +3,7 @@ from iems.auth.schemas import AccessDenied
 from iems.placements.repository import PlacementRepository
 from iems.base.decorators import validate
 from iems.base.response import JSONResponse
-from iems.auth.decorators import not_allowed_roles
+from iems.auth.decorators import not_allowed_roles, require_roles
 from iems.users.schemas import RoleEnum
 from iems.placements.blueprint import placements_bp
 
@@ -15,6 +15,7 @@ from iems.placements.schemas import (
     PlacementNotFoundResponse,
     EmptyResponse,
     UpdatePlacementStatusRequest,
+    CreatePlacementEnrollRequest
 )
 
 
@@ -22,6 +23,13 @@ from iems.placements.schemas import (
 @not_allowed_roles([RoleEnum.PARENTS])
 @validate(body=CreatePlacementRequest)
 async def create_placement(request, data: CreatePlacementRequest, **_):
+    placement_id = await PlacementRepository.create_placement(data)
+    return JSONResponse(CreatePlacementResponse(id=placement_id).model_dump_json(), 200)
+
+@placements_bp.post("/enrollment")
+@not_allowed_roles([RoleEnum.PARENTS])
+@validate(body=CreatePlacementRequest)
+async def create_enroll_placement(request, data:CreatePlacementEnrollRequest , **_):
     placement_id = await PlacementRepository.create_placement(data)
     return JSONResponse(CreatePlacementResponse(id=placement_id).model_dump_json(), 200)
 
@@ -41,6 +49,12 @@ async def get_placement(request, placement_id: UUID, **_):
 
     return JSONResponse(placement.model_dump_json(), 200)
 
+@placements_bp.get("/")
+@not_allowed_roles([RoleEnum.PARENTS])
+async def get_placements(request, **_):
+    placements = await PlacementRepository.get_placement()
+    return JSONResponse(GetPlacementByStudentResponse(placements=placements).model_dump_json(), 200)
+
 
 @placements_bp.get("/student/<student_id:uuid>")
 @not_allowed_roles([RoleEnum.PARENTS])
@@ -56,6 +70,18 @@ async def get_placements_by_student(request, student_id: UUID, **_):
     return JSONResponse(GetPlacementByStudentResponse(placements=placements).model_dump_json(), 200)
 
 
+@placements_bp.post("/status/<placement_id:uuid>")
+#@not_allowed_roles([RoleEnum.PARENTS])
+@require_roles([RoleEnum.STUDENT])
+@validate(body=UpdatePlacementStatusRequest)
+async def update_placement_status(
+    request, placement_id: UUID, data: UpdatePlacementStatusRequest, **_
+):
+    success = await PlacementRepository.update_placement_status(placement_id, data)
+    if not success:
+        return JSONResponse(PlacementNotFoundResponse().model_dump_json(), 404)
+    return JSONResponse(EmptyResponse().model_dump_json(), 200)
+
 @placements_bp.patch("/<placement_id:uuid>")
 @not_allowed_roles([RoleEnum.PARENTS])
 @validate(body=UpdatePlacementRequest)
@@ -68,16 +94,6 @@ async def update_placement(
     return JSONResponse(EmptyResponse().model_dump_json(), 200)
 
 
-@placements_bp.patch("/<placement_id:uuid>/status")
-@not_allowed_roles([RoleEnum.PARENTS])
-@validate(body=UpdatePlacementStatusRequest)
-async def update_placement_status(
-    request, placement_id: UUID, data: UpdatePlacementStatusRequest, **_
-):
-    success = await PlacementRepository.update_placement_status(placement_id, data)
-    if not success:
-        return JSONResponse(PlacementNotFoundResponse().model_dump_json(), 404)
-    return JSONResponse(EmptyResponse().model_dump_json(), 200)
 
 
 @placements_bp.delete("/<placement_id:uuid>")

@@ -41,6 +41,18 @@ async def get_student_attendence(request, student_id: UUID, **_):
     result = await AttendenceRepository.get_attendence_by_student(student_id)
     return JSONResponse(result.model_dump_json(), 200)
 
+@attendence_bp.get("/course/<course_id:uuid>/<student_id:uuid>")
+async def get_student_attendence_by_course_id(request,course_id, student_id: UUID, **_):
+    if (
+        request.ctx.user.role == RoleEnum.STUDENT
+        and request.ctx.user.user_id != student_id
+    ):
+        return JSONResponse(AccessDenied().model_dump_json(), 403)
+
+    result = await AttendenceRepository.get_attendence_by_course_and_student_id(course_id, student_id)
+    return JSONResponse(result.model_dump_json(), 200)
+
+
 
 @attendence_bp.patch("/<attendence_id:uuid>")
 @require_roles([RoleEnum.TEACHER])

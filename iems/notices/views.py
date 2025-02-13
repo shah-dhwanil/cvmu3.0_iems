@@ -3,7 +3,7 @@ from iems.notices.blueprint import notices_bp
 from iems.notices.repository import NoticeRepository
 from iems.base.decorators import validate
 from iems.base.response import JSONResponse
-from iems.auth.decorators import require_roles
+from iems.auth.decorators import not_allowed_roles, require_roles
 from iems.users.schemas import RoleEnum
 
 from iems.notices.schemas import (
@@ -18,7 +18,7 @@ from iems.notices.schemas import (
 
 
 @notices_bp.post("/")
-@require_roles([RoleEnum.ADMIN])
+@not_allowed_roles([RoleEnum.STUDENT, RoleEnum.PARENTS])
 @validate(body=CreateNoticeRequest)
 async def create_notice(request, data: CreateNoticeRequest, **_):
     data.created_by = request.ctx.user.user_id
@@ -64,7 +64,7 @@ async def get_notices_by_target_audience(request, target_audience: str, **_):
 
 
 @notices_bp.patch("/<notice_id:uuid>")
-@require_roles([RoleEnum.ADMIN])
+@not_allowed_roles([RoleEnum.STUDENT, RoleEnum.PARENTS])
 @validate(body=UpdateNoticeRequest)
 async def update_notice(
     request, notice_id: UUID, data: UpdateNoticeRequest, **_
@@ -76,7 +76,7 @@ async def update_notice(
 
 
 @notices_bp.delete("/<notice_id:uuid>")
-@require_roles([RoleEnum.ADMIN])
+@not_allowed_roles([RoleEnum.STUDENT, RoleEnum.PARENTS])
 async def delete_notice(request, notice_id: UUID, **_):
     success = await NoticeRepository.delete_notice(notice_id)
     if not success:

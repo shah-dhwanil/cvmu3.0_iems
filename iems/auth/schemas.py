@@ -11,6 +11,7 @@ class LoginRequest(BaseModel):
 class LoginResponse(BaseModel):
     token: str
     role: str
+    user_id:UUID
 
 
 class TokenPayload(BaseModel):

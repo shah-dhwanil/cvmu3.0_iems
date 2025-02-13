@@ -17,6 +17,7 @@ class FeesRepository:
     async def create_fees(create_fees: CreateFeesRequest) -> CreateFeesResponse:
         fees_id = uuid7()
         async with PGConnection.get_connection() as conn:
+            uid = await conn.fetchval("SELECT id FROM students WHERE enrollment_id = $1",create_fees.enrollment_id)
             row = await conn.fetchrow(
                 """
                 INSERT INTO fees (id, date, student_id, type, payment_type, transaction_id, amount)
@@ -25,7 +26,7 @@ class FeesRepository:
                 """,
                 str(fees_id),
                 create_fees.date,
-                create_fees.student_id,
+                uid,
                 create_fees.type,
                 create_fees.payment_type,
                 create_fees.transaction_id,
