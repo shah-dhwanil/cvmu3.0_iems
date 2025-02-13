@@ -24,7 +24,7 @@ async def create_notice(request, data: CreateNoticeRequest, **_):
     data.created_by = request.ctx.user.user_id
     notice_id = await NoticeRepository.create_notice(data)
     return JSONResponse(
-        CreateNoticeResponse(id=notice_id).model_dump_json(), 200
+        notice_id.model_dump_json(), 200
     )
 
 

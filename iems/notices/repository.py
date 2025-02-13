@@ -20,7 +20,7 @@ class NoticeRepository:
             await conn.execute(
                 """
                 INSERT INTO notices (id, created_by, title, description, target_audience,batch_id, docs_id)
-                VALUES ($1, $2, $3, $4, $5, $6);
+                VALUES ($1, $2, $3, $4, $5, $6,$7);
                 """,
                 str(notice_id),
                 create_notice.created_by,
@@ -50,8 +50,8 @@ class NoticeRepository:
                     title=row["title"],
                     description=row["description"],
                     target_audience=row["target_audience"],
-                    batch_id=str(row["batch_id"]),
-                    docs_id=str(row["docs_id"]),
+                    batch_id=str(row["batch_id"]) if row["batch_id"] != None else None,
+                    docs_id=str(row["docs_id"]) if row["docs_id"] != None else None,
                 )
             return None
 
@@ -72,8 +72,8 @@ class NoticeRepository:
                     title=row["title"],
                     description=row["description"],
                     target_audience=row["target_audience"],
-                    batch_id=str(row["batch_id"]),
-                    docs_id=str(row["docs_id"])
+                    batch_id=str(row["batch_id"])if row["batch_id"] != None else None,
+                    docs_id=str(row["docs_id"])if row["docs_id"] != None else None
                 )
                 for row in rows
             ]
@@ -99,8 +99,8 @@ class NoticeRepository:
                     title=row["title"],
                     description=row["description"],
                     target_audience=row["target_audience"],
-                    batch_id=str(row["batch_id"]),
-                    docs_id=str(row["docs_id"])
+                    batch_id=str(row["batch_id"]) if row["batch_id"] != None else None,
+                    docs_id=str(row["docs_id"]) if row["docs_id"] != None else None
                 )
                 for row in rows
             ]

@@ -5,6 +5,7 @@ from iems.base.postgres import PGConnection
 from iems.placements.schemas import (
     CreatePlacementEnrollRequest,
     CreatePlacementRequest,
+    GetAllPlacementResponse,
     GetPlacementResponse,
     UpdatePlacementRequest,
     PlacementStatus,
@@ -83,17 +84,17 @@ class PlacementRepository:
         async with PGConnection.get_connection() as conn:
             rows = await conn.fetch(
                 """
-                SELECT id, student_id, company_name, role, 
-                       package, status, letter_uid
-                FROM placement;
+                SELECT placement.id, company_name, package, status, letter_uid, first_name,students.enrollment_id
+                FROM placement
+                INNER JOIN students ON placement.student_id = students.id;
                 """
             )
             return [
-                GetPlacementResponse(
+                GetAllPlacementResponse.Placement(
                     id=str(row["id"]),
-                    student_id=str(row["student_id"]),
+                    first_name=row["first_name"],
+                    enrollment_id=row["enrollment_id"],
                     company_name=row["company_name"],
-                    role=row["role"],
                     package=float(row["package"]),
                     status=PlacementStatus(row["status"]),
                     letter_uid=row["letter_uid"],

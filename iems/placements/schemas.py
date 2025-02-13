@@ -30,6 +30,16 @@ class CreatePlacementEnrollRequest(BaseModel):
 class CreatePlacementResponse(BaseModel):
     id: UUID
 
+class GetAllPlacementResponse(BaseModel):
+    class Placement(BaseModel):
+        id: UUID
+        first_name: str
+        enrollment_id: str
+        company_name: str
+        package: float
+        status: PlacementStatus
+        letter_uid: Optional[UUID]
+    placements: list[Placement]
 
 class GetPlacementResponse(BaseModel):
     id: UUID
@@ -41,7 +51,7 @@ class GetPlacementResponse(BaseModel):
     letter_uid: Optional[UUID]
 
 
-class GetPlacementByStudentResponse(BaseModel):
+class GetPlacementByStudentResponse(BaseModel):    
     placements : list[GetPlacementResponse]
 
 

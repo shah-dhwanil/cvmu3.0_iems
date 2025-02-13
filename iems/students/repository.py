@@ -1,22 +1,33 @@
+from random import randint
 from uuid import UUID
 from typing import Optional
 from asyncpg import ForeignKeyViolationError, UniqueViolationError
 from iems.base.postgres import PGConnection
+from iems.semister.repository import SemisterRepository
 from iems.students.exceptions import StudentAlreadyExistsError
 
 from iems.students.schemas import (
     CreateStudentRequest,
+    CreateStudentResponse,
     GetStudentResponse,
     UpdateStudentCurrentSemRequest,
     UpdateStudentRequest,
     GetAllStudentsResponse,
 )
 from iems.users.exceptions import UserNotFoundException
+from iems.users.repository import UserRepository
+from iems.users.schemas import CreateUserRequest, RoleEnum
 
 
 class StudentRepository:
     @staticmethod
     async def create_student(create_student: CreateStudentRequest) -> UUID:
+        enrollment_no = randint(0,100)
+        uid = await UserRepository.create_user(CreateUserRequest(username=f"student.{enrollment_no}",password="Student@123",role=RoleEnum.STUDENT))
+        print(create_student.batch_id)
+        semister = await SemisterRepository.get_semister_by_branch(create_student.batch_id)
+        semister.sort(key=lambda x: x.sem_no)
+        semister_id = semister[0].id
         async with PGConnection.get_connection() as conn:
             try:
                 await conn.execute(
@@ -27,17 +38,17 @@ class StudentRepository:
                     )
                     VALUES ($1, $2, $3, $4, $5, $6, $7,$8,$9);
                     """,
-                    create_student.id,
+                    uid,
                     create_student.first_name,
                     create_student.last_name,
-                    create_student.enrollment_id,
+                    str(enrollment_no),
                     create_student.gender,
                     create_student.contact_no,
                     create_student.email_id,
                     create_student.batch_id,
-                    create_student.current_sem,
+                    semister_id
                 )
-                return create_student.id
+                return CreateStudentResponse(uid = str(uid), enrollment_id=str(enrollment_no))
             except UniqueViolationError:
                 raise StudentAlreadyExistsError()
             except ForeignKeyViolationError:

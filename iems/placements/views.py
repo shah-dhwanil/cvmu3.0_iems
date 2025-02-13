@@ -10,6 +10,7 @@ from iems.placements.blueprint import placements_bp
 from iems.placements.schemas import (
     CreatePlacementRequest,
     CreatePlacementResponse,
+    GetAllPlacementResponse,
     GetPlacementByStudentResponse,
     UpdatePlacementRequest,
     PlacementNotFoundResponse,
@@ -28,9 +29,9 @@ async def create_placement(request, data: CreatePlacementRequest, **_):
 
 @placements_bp.post("/enrollment")
 @not_allowed_roles([RoleEnum.PARENTS])
-@validate(body=CreatePlacementRequest)
+@validate(body=CreatePlacementEnrollRequest)
 async def create_enroll_placement(request, data:CreatePlacementEnrollRequest , **_):
-    placement_id = await PlacementRepository.create_placement(data)
+    placement_id = await PlacementRepository.create_placement_by_student(data)
     return JSONResponse(CreatePlacementResponse(id=placement_id).model_dump_json(), 200)
 
 
@@ -53,7 +54,7 @@ async def get_placement(request, placement_id: UUID, **_):
 @not_allowed_roles([RoleEnum.PARENTS])
 async def get_placements(request, **_):
     placements = await PlacementRepository.get_placement()
-    return JSONResponse(GetPlacementByStudentResponse(placements=placements).model_dump_json(), 200)
+    return JSONResponse(GetAllPlacementResponse(placements=placements).model_dump_json(), 200)
 
 
 @placements_bp.get("/student/<student_id:uuid>")

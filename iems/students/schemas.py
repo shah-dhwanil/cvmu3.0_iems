@@ -4,16 +4,16 @@ from pydantic import BaseModel, EmailStr, Field
 
 # Create operations
 class CreateStudentRequest(BaseModel):
-    id: UUID
     first_name: str = Field(..., max_length=32)
     last_name: str = Field(..., max_length=32)
-    enrollment_id: str = Field(..., max_length=16)
     gender: str = Field(..., max_length=1)
     contact_no: str = Field(..., max_length=16)
     email_id: EmailStr = Field(..., max_length=32)
     batch_id: UUID
-    current_sem: UUID
 
+class CreateStudentResponse(BaseModel):
+    uid: UUID
+    enrollment_id: str
 
 class GetStudentResponse(BaseModel):
     id: UUID

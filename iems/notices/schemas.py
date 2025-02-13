@@ -6,9 +6,9 @@ class CreateNoticeRequest(BaseModel):
     title: str = Field(..., max_length=32)
     description: str
     target_audience: Optional[str] = Field(None, max_length=32)
-    batch_id:Optional[UUID]
+    batch_id:Optional[UUID] = None
     docs_id: Optional[UUID] = None
-    created_by: UUID
+    created_by: Optional[UUID] = None
 
 
 class CreateNoticeResponse(BaseModel):
@@ -20,9 +20,9 @@ class GetNoticeResponse(BaseModel):
     created_by: UUID
     title: str
     description: str
-    target_audience: Optional[str]
-    batch_id:Optional[UUID]
-    docs_id: Optional[UUID]
+    target_audience: Optional[str] = None
+    batch_id:Optional[UUID] = None
+    docs_id: Optional[UUID] = None
 
 
 class GetNoticesResponse(BaseModel):
