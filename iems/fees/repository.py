@@ -17,20 +17,20 @@ class FeesRepository:
     async def create_fees(create_fees: CreateFeesRequest) -> CreateFeesResponse:
         fees_id = uuid7()
         async with PGConnection.get_connection() as conn:
-            uid = await conn.fetchval("SELECT id FROM students WHERE enrollment_id = $1",create_fees.enrollment_id)
             row = await conn.fetchrow(
                 """
-                INSERT INTO fees (id, date, student_id, type, payment_type, transaction_id, amount)
-                VALUES ($1, $2, $3, $4, $5, $6, $7)
+                INSERT INTO fees (id, date, student_id, type, payment_type, transaction_id, amount, docs_id)
+                VALUES ($1, $2, $3, $4, $5, $6, $7,$8)
                 RETURNING id, recipt_id;
                 """,
                 str(fees_id),
                 create_fees.date,
-                uid,
+                create_fees.student_id,
                 create_fees.type,
                 create_fees.payment_type,
                 create_fees.transaction_id,
                 create_fees.amount,
+                create_fees.docs_uuid,
             )
             return CreateFeesResponse(id=str(row["id"]), recipt_id=row["recipt_id"])
 
@@ -39,8 +39,9 @@ class FeesRepository:
         async with PGConnection.get_connection() as conn:
             row = await conn.fetchrow(
                 """
-                SELECT id, recipt_id, date, student_id, type, payment_type, transaction_id, amount
+                SELECT fees.id, recipt_id, date, student_id,enrollment_id, type, payment_type, transaction_id, amount,docs_id,status
                 FROM fees
+                INNER JOIN students ON fees.student_id = students.id
                 WHERE id = $1;
                 """,
                 fees_id,
@@ -51,10 +52,13 @@ class FeesRepository:
                     recipt_id=row["recipt_id"],
                     date=row["date"],
                     student_id=str(row["student_id"]),
+                    enrollment_id=row["enrollment_id"],
                     type=row["type"],
                     payment_type=row["payment_type"],
                     transaction_id=row["transaction_id"],
                     amount=row["amount"],
+                    docs_uuid=str(row["docs_id"]) if row["docs_id"] else None,
+                    status=row["status"]
                 )
             return None
 
@@ -63,8 +67,9 @@ class FeesRepository:
         async with PGConnection.get_connection() as conn:
             rows = await conn.fetch(
                 """
-                SELECT id, recipt_id, date, student_id, type, payment_type, transaction_id, amount
+                SELECT fees.id, recipt_id, date, student_id,enrollment_id, type, payment_type, transaction_id, amount,docs_id,status
                 FROM fees
+                INNER JOIN students ON fees.student_id = students.id
                 WHERE student_id = $1
                 ORDER BY date DESC;
                 """,
@@ -76,14 +81,48 @@ class FeesRepository:
                     recipt_id=row["recipt_id"],
                     date=row["date"],
                     student_id=str(row["student_id"]),
+                    enrollment_id=row["enrollment_id"],
                     type=row["type"],
                     payment_type=row["payment_type"],
                     transaction_id=row["transaction_id"],
                     amount=row["amount"],
+                    docs_uuid=str(row["docs_id"]) if row["docs_id"] else None,
+                    status=row["status"]
                 )
                 for row in rows
             ]
             return GetFeesByStudentResponse(fees=fees_list)
+
+    @staticmethod
+    async def get_pending_fees() -> GetFeesByStudentResponse:
+        async with PGConnection.get_connection() as conn:
+            rows = await conn.fetch(
+                """
+                SELECT fees.id, recipt_id, date, student_id,enrollment_id, type, payment_type, transaction_id, amount,docs_id,status
+                FROM fees
+                INNER JOIN students ON fees.student_id = students.id
+                WHERE status = 'PENDING'
+                ORDER BY date DESC;
+                """,
+            )
+            fees_list = [
+                GetFeesResponse(
+                    id=str(row["id"]),
+                    recipt_id=row["recipt_id"],
+                    date=row["date"],
+                    student_id=str(row["student_id"]),
+                    enrollment_id=row["enrollment_id"],
+                    type=row["type"],
+                    payment_type=row["payment_type"],
+                    transaction_id=row["transaction_id"],
+                    amount=row["amount"],
+                    docs_uuid=str(row["docs_id"]) if row["docs_id"] else None,
+                    status=row["status"]
+                )
+                for row in rows
+            ]
+            return GetFeesByStudentResponse(fees=fees_list)
+
 
     @staticmethod
     async def update_fees(fees_id: UUID, update_fees: UpdateFeesRequest) -> bool:
@@ -114,3 +153,16 @@ class FeesRepository:
                 fees_id,
             )
             return result == "DELETE 1"
+    @staticmethod
+    async def update_fees_status(fees_id: UUID, status: str) -> bool:
+        async with PGConnection.get_connection() as conn:
+            result = await conn.execute(
+                """
+                UPDATE fees
+                SET status = $1
+                WHERE id = $2;
+                """,
+                status,
+                fees_id,
+            )
+            return result == "UPDATE 1"

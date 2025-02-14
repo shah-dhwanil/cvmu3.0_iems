@@ -12,11 +12,12 @@ from iems.fees.schemas import (
     UpdateFeesRequest,
     FeesNotFoundResponse,
     EmptyResponse,
+    UpdateFeesStatusRequest,
 )
 
 
 @fees_bp.post("/")
-@require_roles([RoleEnum.ADMIN, RoleEnum.PRINCIPAL, RoleEnum.ACCOUNT_STAFF])
+@require_roles([RoleEnum.ADMIN, RoleEnum.PRINCIPAL, RoleEnum.ACCOUNT_STAFF, RoleEnum.STUDENT])
 @validate(body=CreateFeesRequest)
 async def create_fees(request, data: CreateFeesRequest, **_):
     response = await FeesRepository.create_fees(data)
@@ -56,6 +57,23 @@ async def update_fees(request, fees_id: UUID, data: UpdateFeesRequest, **_):
 @require_roles([RoleEnum.ADMIN, RoleEnum.PRINCIPAL, RoleEnum.ACCOUNT_STAFF])
 async def delete_fees(request, fees_id: UUID, **_):
     success = await FeesRepository.delete_fees(fees_id)
+    if not success:
+        return JSONResponse(FeesNotFoundResponse().model_dump_json(), 404)
+    return JSONResponse(EmptyResponse().model_dump_json(), 200)
+@fees_bp.get("/pending/")
+@require_roles([RoleEnum.ADMIN, RoleEnum.PRINCIPAL, RoleEnum.ACCOUNT_STAFF])
+async def get_pending_fees(request, **_):
+    fees = await FeesRepository.get_pending_fees()
+    return JSONResponse(fees.model_dump_json(), 200)
+
+@fees_bp.patch("/<fees_id:uuid>/status")
+@require_roles([RoleEnum.ADMIN, RoleEnum.PRINCIPAL, RoleEnum.ACCOUNT_STAFF])
+@validate(body=UpdateFeesStatusRequest)
+async def update_fees_status(request, fees_id: UUID, data: UpdateFeesStatusRequest, **_):
+    if data.accepted:
+        success = await FeesRepository.update_fees_status(fees_id, "ACCEPTED")
+    else:
+        success = await FeesRepository.update_fees_status(fees_id, "REJECTED")
     if not success:
         return JSONResponse(FeesNotFoundResponse().model_dump_json(), 404)
     return JSONResponse(EmptyResponse().model_dump_json(), 200)

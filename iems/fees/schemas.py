@@ -1,3 +1,4 @@
+from typing import Optional
 from pydantic import BaseModel, Field
 from uuid import UUID
 from datetime import date
@@ -21,11 +22,13 @@ class FeesTypeEnum(str, Enum):
 
 class CreateFeesRequest(BaseModel, use_enum_values=True):
     date: date
-    enrollment_id: str
+    student_id: str
     type: FeesTypeEnum
     payment_type: PaymentTypeEnum
     transaction_id: str = Field(..., max_length=128)
     amount: float = Field(..., gt=0)
+    docs_uuid:Optional[UUID]=None
+    status:str = "PENDING"
 
 
 class CreateFeesResponse(BaseModel):
@@ -38,10 +41,13 @@ class GetFeesResponse(BaseModel):
     recipt_id: int
     date: date
     student_id: UUID
+    enrollment_id: str
     type: FeesTypeEnum
     payment_type: PaymentTypeEnum
     transaction_id: str
     amount: float
+    docs_uuid:Optional[UUID]
+    status:str = "PENDING"
 
 
 class GetFeesByStudentResponse(BaseModel):
@@ -54,6 +60,9 @@ class UpdateFeesRequest(BaseModel):
     payment_type: PaymentTypeEnum
     transaction_id: str = Field(max_length=128)
     amount: float = Field(gt=0)
+
+class UpdateFeesStatusRequest(BaseModel):
+    accepted: bool
 
 
 class FeesNotFoundResponse(BaseModel):
