@@ -3,6 +3,7 @@ from uuid import UUID
 from typing import Optional
 from asyncpg import ForeignKeyViolationError, UniqueViolationError
 from iems.base.postgres import PGConnection
+from iems.batch.repository import BatchRepository
 from iems.semister.repository import SemisterRepository
 from iems.students.exceptions import StudentAlreadyExistsError
 
@@ -21,34 +22,38 @@ from iems.users.schemas import CreateUserRequest, RoleEnum
 
 class StudentRepository:
     @staticmethod
-    async def create_student(create_student: CreateStudentRequest) -> UUID:
-        enrollment_no = randint(0,100)
-        uid = await UserRepository.create_user(CreateUserRequest(username=f"student.{enrollment_no}",password="Student@123",role=RoleEnum.STUDENT))
-        print(create_student.batch_id)
+    async def create_student(create_student: CreateStudentRequest) -> CreateStudentResponse:
+        uid = await UserRepository.create_user(CreateUserRequest(username=f"student112q7",password="Student@123",role=RoleEnum.STUDENT))
+        branch = await BatchRepository.get_batch(create_student.batch_id)
+        branch_name = branch.branch.split(",")[1];
+        seq_name = f"{branch_name}_{branch.year}"
         semister = await SemisterRepository.get_semister_by_branch(create_student.batch_id)
         semister.sort(key=lambda x: x.sem_no)
         semister_id = semister[0].id
         async with PGConnection.get_connection() as conn:
             try:
+                enrollment_id =  await conn.fetchval("SELECT nextval($1)",seq_name)
+                enrollment_id = f"{branch.year}{branch_name}{enrollment_id}"
                 await conn.execute(
                     """
                     INSERT INTO students (
                         id, first_name, last_name, enrollment_id,
                         gender, contact_no, email_id,batch_id,current_sem
                     )
-                    VALUES ($1, $2, $3, $4, $5, $6, $7,$8,$9);
+                    VALUES ($1, $2, $3, $4, $5 ,$6, $7,$8,$9);
                     """,
                     uid,
                     create_student.first_name,
                     create_student.last_name,
-                    str(enrollment_no),
+                    enrollment_id,
                     create_student.gender,
                     create_student.contact_no,
                     create_student.email_id,
                     create_student.batch_id,
                     semister_id
                 )
-                return CreateStudentResponse(uid = str(uid), enrollment_id=str(enrollment_no))
+                await conn.execute("UPDATE users SET username = $1 WHERE id = $2",f"student.{enrollment_id}",uid)
+                return CreateStudentResponse(uid = str(uid), enrollment_id=enrollment_id)
             except UniqueViolationError:
                 raise StudentAlreadyExistsError()
             except ForeignKeyViolationError:

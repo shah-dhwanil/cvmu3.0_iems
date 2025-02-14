@@ -51,6 +51,7 @@ def log_response(request: Request, response: HTTPResponse):
         method=request.method,
         user_ip=request.client_ip,
         payload=len(response.body),
+        body = response.body
     )
 
 

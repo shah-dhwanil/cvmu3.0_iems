@@ -29,6 +29,9 @@ class BatchRepository:
                     create_batch.hod_id,
                     create_batch.counciller_id,
                 )
+                key = f"{create_batch.branch.split(",")[1]}_{create_batch.year}"
+                res = await conn.execute(f"CREATE SEQUENCE {key};")
+                print(res)
                 return str(batch_id)
             except ForeignKeyViolationError:
                 raise StaffNotFoundError()

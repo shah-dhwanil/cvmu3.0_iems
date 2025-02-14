@@ -28,8 +28,8 @@ from iems.students.schemas import (
 async def create_student(request, data: CreateStudentRequest, **_):
     """Create a new student"""
     try:
-        await StudentRepository.create_student(data)
-        return JSONResponse(EmptyResponse().model_dump_json(), 201)
+        res = await StudentRepository.create_student(data)
+        return JSONResponse(res.model_dump_json(), 201)
     except StudentAlreadyExistsError:
         return JSONResponse(StudentAlreadyExistsResponse().model_dump_json(), 409)
     except UserNotFoundException:
