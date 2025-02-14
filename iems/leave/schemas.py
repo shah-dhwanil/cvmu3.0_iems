@@ -15,8 +15,8 @@ class LeaveStatusEnum(str, Enum):
 
 class CreateLeaveRequest(BaseModel):
     student_id: UUID
-    from_date: date = Field(..., alias="from")
-    to_date: date = Field(..., alias="to")
+    from_date: date
+    to_date: date 
     reason: str
     document_id: Optional[UUID] = None
 
@@ -28,8 +28,8 @@ class CreateLeaveResponse(BaseModel):
 class GetLeaveResponse(BaseModel, use_enum_values=True):
     id: UUID
     student_id: UUID
-    from_date: date = Field(..., alias="from")
-    to_date: date = Field(..., alias="to")
+    from_date: date
+    to_date: date
     reason: str
     status: LeaveStatusEnum
     document_id: Optional[UUID]

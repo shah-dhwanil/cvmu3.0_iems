@@ -26,8 +26,10 @@ class GetCourseResponse(BaseModel):
 class GetCourseTaughtBy(BaseModel):
     id: UUID
     name: str
+    sem_id:UUID
     branch: str
     year: int
+
 
 
 class GetCouseByStudentId(BaseModel):

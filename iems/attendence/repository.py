@@ -120,7 +120,7 @@ class AttendenceRepository:
                 FROM attendence
                 INNER JOIN courses ON attendence.course_id = courses.id
                 INNER JOIN students ON attendence.student_id = students.id
-                WHERE student_id = $1 AND courses.semester_id = students.curr_sem
+                WHERE student_id = $1 AND courses.sem_id = students.current_sem
                 GROUP BY course_id;
                 """,
                 student_id,

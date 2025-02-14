@@ -42,13 +42,13 @@ class LeaveRepository:
             )
             if row:
                 return GetLeaveResponse(
-                    id=row["id"],
-                    student_id=row["student_id"],
+                    id=str(row["id"]),
+                    student_id=str(row["student_id"]),
                     from_date=row["from_date"],
                     to_date=row["to_date"],
                     reason=row["reason"],
                     status=LeaveStatusEnum(row["status"]),
-                    document_id=row["document_id"],
+                    document_id=row["document_id"] if row["document_id"] else None,
                 )
             return None
 
@@ -181,14 +181,13 @@ class LeaveRepository:
         async with PGConnection.get_connection() as conn:
             leave = await LeaveRepository.get_leave(leave_id)
             courses = await CourseRepository.get_course_by_student_id(leave.student_id)
-            course_ids = [course.id for course in courses]
+            course_ids = [str(course.id) for course in courses]
+            print(course_ids)
             await conn.execute(
                 """
-                UPDATE attendance
+                UPDATE attendence
                 SET dont_care = true
-                WHERE student_id = $1 
-                AND course_id IN $2
-                AND class_time BETWEEN $3 AND $4;
+                WHERE student_id = $1 AND course_id = ANY($2) AND class_time BETWEEN $3 AND $4;
                 """,
                 leave.student_id,
                 course_ids,

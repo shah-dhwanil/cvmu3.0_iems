@@ -20,7 +20,7 @@ from iems.leave.schemas import (
 
 @leave_bp.post("/")
 @validate(body=CreateLeaveRequest)
-@require_roles([RoleEnum.STUDENT])
+@require_roles([RoleEnum.STUDENT,RoleEnum.ADMIN])
 async def create_leave(request, data: CreateLeaveRequest, **_):
     leave_id = await LeaveRepository.create_leave(data)
     return JSONResponse(CreateLeaveResponse(id=leave_id).model_dump_json(), 200)
@@ -70,12 +70,12 @@ async def update_leave(request, leave_id: UUID, data: UpdateLeaveRequest, **_):
 
 
 @leave_bp.patch("/<leave_id:uuid>/status")
-@require_roles([RoleEnum.TEACHER, RoleEnum.HOD])
+@require_roles([RoleEnum.TEACHER, RoleEnum.HOD,RoleEnum.ADMIN])
 @validate(body=UpdateLeaveStatusRequest)
 async def update_leave_status_counciller(
     request, leave_id: UUID, data: UpdateLeaveStatusRequest, **_
 ):
-    if request.ctx.user.role == RoleEnum.TEACHER:
+    """if request.ctx.user.role == RoleEnum.TEACHER:
         if data.accepted:
             success = await LeaveRepository.update_leave_status(
                 leave_id, LeaveStatusEnum.APPROVED_COUNCILLER
@@ -93,7 +93,11 @@ async def update_leave_status_counciller(
         else:
             success = await LeaveRepository.update_leave_status(
                 leave_id, LeaveStatusEnum.DECLINED_HOD
+            )"""
+    success = await LeaveRepository.update_leave_status(
+                leave_id, LeaveStatusEnum.APPROVED
             )
+    await LeaveRepository.approve_leave(leave_id)
     if not success:
         return JSONResponse(LeaveNotFoundResponse().model_dump_json(), 404)
     return JSONResponse("{}", 200)

@@ -12,7 +12,7 @@ from iems.attendence.schemas import MarkAttendence, UpdateAttendence, EmptyRespo
 
 
 @attendence_bp.post("/mark")
-@require_roles([RoleEnum.TEACHER])
+@require_roles([RoleEnum.TEACHER,RoleEnum.ADMIN])
 @validate(body=MarkAttendence)
 async def mark_attendence(request, data: MarkAttendence, **_):
     await AttendenceRepository.mark_attendence(data)

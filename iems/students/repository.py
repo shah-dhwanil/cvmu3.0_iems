@@ -106,6 +106,27 @@ class StudentRepository:
             return GetAllStudentsResponse(students=students)
 
     @staticmethod
+    async def get_students_by_sem_id(sem_id:UUID) -> GetAllStudentsResponse:
+        async with PGConnection.get_connection() as conn:
+            rows = await conn.fetch(
+                """
+                SELECT id, enrollment_id, first_name, last_name
+                FROM students
+                WHERE current_sem = $1 AND active = true;
+                """,
+                sem_id
+            )
+            students = [
+                GetAllStudentsResponse.Student(
+                    id=str(row["id"]),
+                    enrollment_id=row["enrollment_id"],
+                    name=f"{row['first_name']} {row['last_name']}",
+                )
+                for row in rows
+            ]
+            return GetAllStudentsResponse(students=students)
+
+    @staticmethod
     async def update_student(
         student_id: UUID, update_student: UpdateStudentRequest
     ) -> bool:

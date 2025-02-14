@@ -73,7 +73,7 @@ class CourseRepository:
         async with PGConnection.get_connection() as conn:
             row = await conn.fetch(
                 """
-                SELECT courses.id,subjects.name,batch.branch,batch.year FROM courses
+                SELECT courses.id,courses.sem_id,subjects.name,batch.branch,batch.year FROM courses
                 INNER JOIN semister ON courses.sem_id = semister.id
                 INNER JOIN batch ON semister.batch_id = batch.id
                 INNER JOIN subjects ON courses.subject_id = subjects.id
@@ -84,7 +84,7 @@ class CourseRepository:
             )
             return [
                 GetCourseTaughtBy(
-                    id=str(r["id"]), name=r["name"], branch=r["branch"], year=r["year"]
+                    id=str(r["id"]),sem_id=row["sem_id"], name=r["name"], branch=r["branch"], year=r["year"]
                 )
                 for r in row
             ]
