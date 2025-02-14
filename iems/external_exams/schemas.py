@@ -25,7 +25,6 @@ class GetExternalExamResponse(BaseModel):
     yoa: int
     rank: Optional[int]
     marksheet_uuid :Optional[UUID]
-    created_at: str
 
 
 class GetExternalExamsByStudentResponse(BaseModel):

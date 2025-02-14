@@ -24,6 +24,7 @@ class GetStudentResponse(BaseModel):
     contact_no: str = Field(..., max_length=16)
     email_id: EmailStr = Field(..., max_length=32)
     batch_id:UUID
+    current_sem: UUID
     active: bool
 
 

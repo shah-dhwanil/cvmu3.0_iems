@@ -21,7 +21,7 @@ class ExternalExamRepository:
         async with PGConnection.get_connection() as conn:
             await conn.execute(
                 """
-                INSERT INTO external_exams (id, student_id, name, score, seat_no, yoa,marksheet_uuid rank)
+                INSERT INTO external_exams (id, student_id, name, score, seat_no, yoa,marksheet_uuid, rank)
                 VALUES ($1, $2, $3, $4, $5, $6, $7, $8);
                 """,
                 str(exam_id),

@@ -37,7 +37,17 @@ class GetResourceResponse(BaseModel, use_enum_values=True):
 
 
 class GetResourceBySubject(BaseModel):
-    resources: list[GetResourceResponse]
+    class Resource(BaseModel, use_enum_values=True):
+        id: UUID
+        subject_id: UUID
+        subject_name:str
+        title: str
+        shared_at: datetime
+        shared_by: UUID
+        type: ResourceTypeEnum
+        docs_id: UUID
+
+    resources: list[Resource]
 
 
 class UpdateResourceRequest(BaseModel, use_enum_values=True):

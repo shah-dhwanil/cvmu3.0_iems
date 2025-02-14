@@ -5,6 +5,7 @@ from iems.base.postgres import PGConnection
 
 from iems.resources.schemas import (
     CreateResourceRequest,
+    GetResourceBySubject,
     GetResourceResponse,
     UpdateResourceRequest,
     ResourceTypeEnum,
@@ -110,17 +111,19 @@ class ResourceRepository:
         async with PGConnection.get_connection() as conn:
             rows = await conn.fetch(
                 """
-                SELECT id, subject_id, title, shared_at, shared_by, type, docs_id
+                SELECT resources.id, subject_id,name, title, shared_at, shared_by, type, docs_id
                 FROM resources
+                INNER JOIN subjects ON subjects.id = resources.subject_id
                 WHERE shared_by = $1;
                 """,
                 teacher_id,
             )
             return [
-                GetResourceResponse(
+                GetResourceBySubject.Resource(
                     id=str(row["id"]),
                     subject_id=str(row["subject_id"]),
                     title=row["title"],
+                    subject_name=row["name"],
                     shared_at=row["shared_at"],
                     shared_by=str(row["shared_by"]),
                     type=ResourceTypeEnum(row["type"]),

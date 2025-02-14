@@ -10,7 +10,7 @@ apply = [
         id UUID DEFAULT gen_random_uuid(),
         student_id UUID NOT NULL REFERENCES students(id),
         name VARCHAR(64) NOT NULL,
-        score DECIMAL(2,2) NOT NULL,
+        score DECIMAL(4,2) NOT NULL,
         seat_no VARCHAR(64) NOT NULL,
         yoa INT NOT NULL,
         rank INT,
