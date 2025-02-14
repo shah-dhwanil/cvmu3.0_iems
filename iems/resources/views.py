@@ -57,3 +57,10 @@ async def delete_resource(request, resource_id: UUID, **_):
     if not success:
         return JSONResponse(ResourceNotFoundResponse().model_dump_json(), 404)
     return JSONResponse(EmptyResponse().model_dump_json(), 200)
+
+@resources_bp.get("/staff/<staff_id:uuid>")
+async def get_resources_by_staff(request, staff_id: UUID, **_):
+    resources = await ResourceRepository.get_resources_by_teacher(staff_id)
+    return JSONResponse(
+        GetResourceBySubject(resources=resources).model_dump_json(), 200
+    )

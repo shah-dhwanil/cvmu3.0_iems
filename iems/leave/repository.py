@@ -44,6 +44,7 @@ class LeaveRepository:
                 return GetLeaveResponse(
                     id=str(row["id"]),
                     student_id=str(row["student_id"]),
+                    student_name="",
                     from_date=row["from_date"],
                     to_date=row["to_date"],
                     reason=row["reason"],
@@ -68,6 +69,7 @@ class LeaveRepository:
                 GetLeaveResponse(
                     id=row["id"],
                     student_id=row["student_id"],
+                    student_name="",
                     from_date=row["from_date"],
                     to_date=row["to_date"],
                     reason=row["reason"],
@@ -82,19 +84,20 @@ class LeaveRepository:
         async with PGConnection.get_connection() as conn:
             rows = await conn.fetch(
                 """
-                SELECT id, student_id, from_date, to_date, reason, status, document_id, created_at
+                SELECT leaves.id, student_id,students.first_name, from_date, to_date, reason, status, document_id, leaves.created_at
                 FROM leaves
                 INNER JOIN students ON leaves.student_id = students.id
                 INNER JOIN batch ON students.batch_id = batch.id
                 WHERE batch.hod_id = $1 AND status = 'accepted_counciller'
-                ORDER BY created_at DESC;
+                ORDER BY leaves.created_at DESC;
                 """,
                 hod_id,
             )
             return [
                 GetLeaveResponse(
-                    id=row["id"],
-                    student_id=row["student_id"],
+                    id=str(row["id"]),
+                    student_id=str(row["student_id"]),
+                    student_name=row["first_name"],
                     from_date=row["from_date"],
                     to_date=row["to_date"],
                     reason=row["reason"],
@@ -111,19 +114,19 @@ class LeaveRepository:
         async with PGConnection.get_connection() as conn:
             rows = await conn.fetch(
                 """
-                SELECT id, student_id, from_date, to_date, reason, status, document_id, created_at
+                SELECT leaves.id, student_id,students.first_name, from_date, to_date, reason, status, document_id, leaves.created_at
                 FROM leaves
                 INNER JOIN students ON leaves.student_id = students.id
                 INNER JOIN batch ON students.batch_id = batch.id
-                WHERE batch.counciller_id = $1 AND status = 'submitted'
-                ORDER BY created_at DESC;
+                WHERE batch.counciller_id = $1 AND status = 'submitted';
                 """,
                 counciller_id,
             )
             return [
                 GetLeaveResponse(
-                    id=row["id"],
-                    student_id=row["student_id"],
+                    id=str(row["id"]),
+                    student_id=str(row["student_id"]),
+                    student_name=row["first_name"],
                     from_date=row["from_date"],
                     to_date=row["to_date"],
                     reason=row["reason"],

@@ -28,6 +28,7 @@ class CreateLeaveResponse(BaseModel):
 class GetLeaveResponse(BaseModel, use_enum_values=True):
     id: UUID
     student_id: UUID
+    student_name: str
     from_date: date
     to_date: date
     reason: str

@@ -23,7 +23,7 @@ from iems.users.schemas import CreateUserRequest, RoleEnum
 class StudentRepository:
     @staticmethod
     async def create_student(create_student: CreateStudentRequest) -> CreateStudentResponse:
-        uid = await UserRepository.create_user(CreateUserRequest(username=f"student112q7",password="Student@123",role=RoleEnum.STUDENT))
+        uid = await UserRepository.create_user(CreateUserRequest(username=f"student{randint(0,100000)}",password="Student@123",role=RoleEnum.STUDENT))
         branch = await BatchRepository.get_batch(create_student.batch_id)
         branch_name = branch.branch.split(",")[1];
         seq_name = f"{branch_name}_{branch.year}"

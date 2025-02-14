@@ -84,7 +84,7 @@ class CourseRepository:
             )
             return [
                 GetCourseTaughtBy(
-                    id=str(r["id"]),sem_id=row["sem_id"], name=r["name"], branch=r["branch"], year=r["year"]
+                    id=str(r["id"]),sem_id=str(r["sem_id"]), name=r["name"], branch=r["branch"], year=r["year"]
                 )
                 for r in row
             ]

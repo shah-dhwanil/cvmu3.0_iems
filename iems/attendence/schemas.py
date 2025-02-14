@@ -16,6 +16,7 @@ class GetAttendenceByCourseIdAndClassTimeResponse(BaseModel):
         student_id: UUID
         present: bool
         dont_care: bool
+        class_time: datetime
 
     attendence_records: list[AttendenceRecord]
 
@@ -23,6 +24,8 @@ class GetAttendenceByCourseIdAndClassTimeResponse(BaseModel):
 class GetAttendenceByStudentId(BaseModel):
     class AttendenceRecord(BaseModel):
         course_id: UUID
+        course_name:str
+        course_code:str
         present_no: int
         dont_care_no: int
         total_no: int

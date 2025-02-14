@@ -87,16 +87,18 @@ class AttendenceRepository:
         async with PGConnection.get_connection() as conn:
             rows = await conn.fetch(
                 """
-                SELECT id, student_id, present, dont_care
+                SELECT id, student_id, present, dont_care,class_time
                 FROM attendence
                 WHERE course_id = $1 AND student_id = $2;
                 """,
                 course_id,
+                student_id
             )
             records = [
                 GetAttendenceByCourseIdAndClassTimeResponse.AttendenceRecord(
                     id=row["id"],
                     student_id=row["student_id"],
+                    class_time=row["class_time"],
                     present=row["present"],
                     dont_care=row["dont_care"],
                 )
@@ -114,20 +116,25 @@ class AttendenceRepository:
                 """
                 SELECT 
                     course_id,
+                    subjects.name as course_name,
+                    subjects.code as course_code,
                     COUNT(CASE WHEN present = true THEN 1 END) as present_no,
                     COUNT(CASE WHEN dont_care = true THEN 1 END) as dont_care_no,
                     COUNT(*) as total_no
                 FROM attendence
                 INNER JOIN courses ON attendence.course_id = courses.id
+                INNER JOIN subjects ON courses.subject_id = subjects.id
                 INNER JOIN students ON attendence.student_id = students.id
                 WHERE student_id = $1 AND courses.sem_id = students.current_sem
-                GROUP BY course_id;
+                GROUP BY course_id,subjects.name,subjects.code;
                 """,
                 student_id,
             )
             records = [
                 GetAttendenceByStudentId.AttendenceRecord(
                     course_id=row["course_id"],
+                    course_name=row["course_name"],
+                    course_code=row["course_code"],
                     present_no=row["present_no"],
                     dont_care_no=row["dont_care_no"],
                     total_no=row["total_no"],

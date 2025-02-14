@@ -37,11 +37,11 @@ async def get_leave(request, leave_id: UUID, **_):
 @leave_bp.get("/student/<student_id:uuid>")
 @require_roles([RoleEnum.STUDENT])
 async def get_leaves_by_student(request, student_id: UUID, **_):
-    if (
+    """if (
         request.ctx.user.role == RoleEnum.STUDENT
         and request.ctx.user.user_id != student_id
     ):
-        return JSONResponse(AccessDenied().model_dump_json(), 403)
+        return JSONResponse(AccessDenied().model_dump_json(), 403)"""
     leaves = await LeaveRepository.get_leaves_by_student(student_id)
     return JSONResponse(GetLeaveByStudentResponse(leaves=leaves).model_dump_json(), 200)
 

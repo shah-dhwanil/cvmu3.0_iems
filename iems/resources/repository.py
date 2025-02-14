@@ -105,3 +105,26 @@ class ResourceRepository:
                 )
                 for row in rows
             ]
+    @staticmethod
+    async def get_resources_by_teacher(teacher_id: UUID) -> list[GetResourceResponse]:
+        async with PGConnection.get_connection() as conn:
+            rows = await conn.fetch(
+                """
+                SELECT id, subject_id, title, shared_at, shared_by, type, docs_id
+                FROM resources
+                WHERE shared_by = $1;
+                """,
+                teacher_id,
+            )
+            return [
+                GetResourceResponse(
+                    id=str(row["id"]),
+                    subject_id=str(row["subject_id"]),
+                    title=row["title"],
+                    shared_at=row["shared_at"],
+                    shared_by=str(row["shared_by"]),
+                    type=ResourceTypeEnum(row["type"]),
+                    docs_id=row["docs_id"],
+                )
+                for row in rows
+            ]

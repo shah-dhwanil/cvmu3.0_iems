@@ -2,6 +2,7 @@ from uuid import UUID
 from iems.auth.schemas import AccessDenied
 from iems.base.response import JSONResponse
 from iems.base.decorators import validate
+from iems.courses.repository import CourseRepository
 from iems.files.repository import FilesRepository
 from iems.users.exceptions import UserNotFoundException
 from iems.users.schemas import RoleEnum, UserNotFoundResponse
@@ -36,11 +37,13 @@ async def create_student(request, data: CreateStudentRequest, **_):
         return JSONResponse(UserNotFoundResponse().model_dump_json(), 404)
 
 
-@student_bp.get("/semister/<student_id:uuid>")
+@student_bp.get("/course/<student_id:uuid>")
 @not_allowed_roles([RoleEnum.STUDENT, RoleEnum.PARENTS])
 async def get_students_by_sem_id(request, student_id: UUID = None):
     """Get student by ID"""
-    student = await StudentRepository.get_students_by_sem_id(student_id)
+    course_id = await CourseRepository.get_course(student_id)
+    course_id = course_id.sem_id
+    student = await StudentRepository.get_students_by_sem_id(course_id)
     if student:
         return JSONResponse(student.model_dump_json(), 200)
     return JSONResponse(StudentNotFoundResponse().model_dump_json(), 404)
