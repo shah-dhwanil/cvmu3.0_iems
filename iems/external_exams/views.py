@@ -9,7 +9,6 @@ from iems.users.schemas import RoleEnum
 
 from iems.external_exams.schemas import (
     CreateExternalExamRequest,
-    CreateExternalExamResponse,
     UpdateExternalExamRequest,
     ExternalExamNotFoundResponse,
     EmptyResponse,

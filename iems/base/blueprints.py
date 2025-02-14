@@ -16,6 +16,7 @@ from iems.placements.views import placements_bp
 from iems.files.views import files_bp
 from iems.external_exams.views import external_exams_bp
 from iems.notices.views import notices_bp
+from iems.events.views import events_bp
 
 def register_blueprints(app):
     app.blueprint(users_bp)
@@ -36,3 +37,4 @@ def register_blueprints(app):
     app.blueprint(files_bp)
     app.blueprint(external_exams_bp)
     app.blueprint(notices_bp)
+    app.blueprint(events_bp)

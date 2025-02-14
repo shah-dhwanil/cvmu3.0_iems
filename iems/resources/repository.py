@@ -95,10 +95,11 @@ class ResourceRepository:
                 subject_id,
             )
             return [
-                GetResourceResponse(
+                GetResourceBySubject.Resource(
                     id=str(row["id"]),
                     subject_id=str(row["subject_id"]),
                     title=row["title"],
+                    subject_name= "",
                     shared_at=row["shared_at"],
                     shared_by=str(row["shared_by"]),
                     type=ResourceTypeEnum(row["type"]),
