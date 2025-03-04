@@ -190,7 +190,7 @@ class LeaveRepository:
                 """
                 UPDATE attendence
                 SET dont_care = true
-                WHERE student_id = $1 AND course_id = ANY($2) AND class_time BETWEEN $3 AND $4;
+                WHERE student_id = $1 AND course_id = ANY($2) AND class_time BETWEEN $3 AND $4 AND present=false;
                 """,
                 leave.student_id,
                 course_ids,

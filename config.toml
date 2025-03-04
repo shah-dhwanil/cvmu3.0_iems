@@ -1,6 +1,6 @@
 [DEFAULT]
-PUBLIC_ROUTES = ["iems.auth.login"]
-BRANCH_LIST = ["Computer Engineering","Computer Science & DESIGN"]
+PUBLIC_ROUTES = ["iems.auth.login","iems.files.save_file","iems.files.get_file","iems.students.extract_aadhaar","iems.students.extract_result"]
+BRANCH_LIST = ["CSD","Computer Science & Design"]
 [DEV]
 SERVER_HOST = "localhost"
 SERVER_PORT = 8000
