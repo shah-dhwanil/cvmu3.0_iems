@@ -1,0 +1,14 @@
+asyncpg>=0.30.0
+pydantic>=2.10.6
+sanic>=24.12.0
+python-dotenv>=1.0.1
+structlog>=25.1.0
+orjson>=3.10.15
+argon2-cffi>=23.1.0
+uuid-utils>=0.10.0
+pyseto>=1.8.2
+email-validator>=2.2.0
+google-genai>=1.1.0
+google-ai-generativelanguage>=0.6.15
+google-generativeai>=0.8.4
+sanic-cors>=2.2.0
